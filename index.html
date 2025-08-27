@@ -65,6 +65,44 @@ main{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
   th,td{padding:7px 6px}
   input[type=number]{max-width:108px}
 }
+
+/* === Compact Pro: larger text, tighter spacing, better use of screen === */
+body{font-size:16px; line-height:1.35}
+
+/* mini hero */
+.hero{padding:8px 12px; margin:6px 10px 8px; border-bottom-left-radius:12px; border-bottom-right-radius:12px}
+.hero-title{font-size:18px}
+.hero-sub{font-size:12px}
+.chips{gap:6px}
+.chip{padding:3px 8px; font-size:13px}
+
+/* cards & layout */
+.card{padding:10px; margin-bottom:8px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.18)}
+.row{gap:8px}
+
+/* form controls (bigger text, not tall) */
+input,select,textarea{
+  font-size:17px;           /* prevents iOS zoom + makes text bigger */
+  padding:10px 12px;
+  height:44px;              /* comfortable tap height */
+  border-radius:12px;
+}
+input[type="month"],input[type="date"]{height:40px; padding:8px 10px}
+input[type="number"]{max-width:140px}
+
+/* table density: bigger font, less padding */
+th,td{padding:6px 6px; font-size:15px}
+tbody tr:nth-child(odd){background:rgba(255,255,255,.015)}
+tfoot td{padding-top:8px}
+
+/* pills + labels */
+.pill{padding:2px 8px; font-size:12px}
+
+/* bottom tab bar: slimmer but readable, frees content space */
+footer.tabbar{padding:4px 4px calc(6px + env(safe-area-inset-bottom,0px))}
+.tabbar .ico{font-size:20px}
+.tabbar .lbl{font-size:12px}
+main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 </style>
 </head>
 <body>
