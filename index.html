@@ -3,155 +3,101 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>My Simplifi • compact</title>
+<title>My Simplifi • mobile budget</title>
 <style>
 :root{
-  --bg:#0b0f17; --panel:#111624; --panel2:#0e1422; --glass:rgba(20,26,42,.6);
-  --line:#20273a; --text:#eef2ff; --muted:#9aa3b2;
-  --pri:#7dd3fc; --ok:#34d399; --warn:#fbbf24; --bad:#fb7185;
-  --tab:#12182b; --sticky-top: 96px;
+  --bg:#0b0f17; --panel:#0f1422; --panel2:#0c1221; --line:#1f2a3e; --glass:rgba(15,20,34,.65);
+  --text:#eef2ff; --muted:#9aa3b2; --ok:#34d399; --bad:#fb7185; --pri:#60a5fa; --chip:#101a31;
+  --sticky-top: 78px;
 }
 *{box-sizing:border-box}
-html,body{margin:0;height:100%;background:radial-gradient(1200px 600px at 20% -10%,#10172a,transparent),linear-gradient(#0b0f17,#0b0f17)}
-body{color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+html,body{margin:0;height:100%;background:linear-gradient(#0b0f17,#0b0f17);color:var(--text);font:16px/1.35 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
 a,button,input,select,textarea{font:inherit;color:inherit}
 button{cursor:pointer}
 :focus-visible{outline:2px solid var(--pri);outline-offset:2px}
-@media (prefers-reduced-motion:no-preference){
-  .fade{animation:fade .25s ease-out}
-  @keyframes fade{from{opacity:.001;transform:translateY(2px)}}
-}
-/* header + mini hero */
-header{position:sticky;top:0;z-index:40;background:rgba(8,12,22,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+header{position:sticky;top:0;z-index:40;background:rgba(10,14,24,.85);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
 .header-inner{display:flex;align-items:center;justify-content:center;padding:10px 14px}
-.brand{font-weight:800;letter-spacing:.2px;font-size:15px}
-.hero{background:linear-gradient(135deg,#3b82f6, #22d3ee);color:#061122;border-bottom-left-radius:14px;border-bottom-right-radius:14px;margin:8px 12px 10px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
-.hero-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
-.hero h2{margin:0;font-size:18px;letter-spacing:.2px}
-.chips{display:flex;gap:6px;flex-wrap:wrap}
-.chip{background:rgba(255,255,255,.85);color:#061122;border-radius:999px;padding:4px 8px;font-weight:700}
-main{max-width:980px;margin:0 auto;padding:10px 12px 98px}
-.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.brand{font-weight:800;letter-spacing:.2px}
+main{max-width:980px;margin:0 auto;padding:10px 12px calc(88px + env(safe-area-inset-bottom,0px))}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:14px;padding:12px;margin-bottom:10px;box-shadow:0 6px 16px rgba(0,0,0,.18)}
 .row{display:flex;gap:10px;flex-wrap:wrap}
 .row>.card{flex:1 1 300px}
 label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0c1326;color:#fff;font-size:16px}
-input[type="month"],input[type="date"]{padding:8px 10px}
+input,select,textarea{width:100%;padding:10px 12px;height:44px;border-radius:12px;border:1px solid var(--line);background:#0c1326;color:#fff}
+input[type="month"],input[type="date"]{height:40px;padding:8px 10px}
 small.muted{color:var(--muted);font-size:12px}
 .table{width:100%;border-collapse:separate;border-spacing:0}
-th,td{padding:8px 8px;border-bottom:1px dashed #1e2740;font-size:13.5px}
-th{position:sticky;top:var(--sticky-top);background:#0e162c;color:#cfe3ff;z-index:2}
-tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
-tfoot td{border-top:1px solid var(--line);font-weight:700}
+th,td{padding:6px 6px;font-size:15px;border-bottom:1px dashed #1c2742}
+th{position:sticky;top:var(--sticky-top);z-index:2;background:#0f1830;color:#cfe3ff}
+tbody tr:nth-child(odd){background:rgba(255,255,255,.015)}
+tfoot td{border-top:1px solid var(--line);font-weight:700;padding-top:8px}
 .right{text-align:right}
 .mono{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
-.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
-.p-blue{background:rgba(125,211,252,.15);color:#7dd3fc}.p-ok{background:rgba(52,211,153,.18);color:#34d399}
-.p-bad{background:rgba(251,113,133,.15);color:#fb7185}
-.btn{background:var(--pri);color:#061122;border:none;border-radius:10px;padding:10px 12px;font-weight:800}
-.btn.ghost{background:transparent;border:1px solid var(--line);color:#d7e2ff}
-.good{color:#22c55e}.bad{color:#fb7185}
-footer.tabbar{position:fixed;left:0;right:0;bottom:0;background:rgba(10,14,24,.85);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px 6px  calc(8px + env(safe-area-inset-bottom,0px));z-index:50}
-.tabbar button{background:transparent;border:none;color:#cbd5ff;padding:6px 4px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
-.tabbar .ico{font-size:18px}.tabbar .lbl{font-size:11px}
-.tabbar button.active{background:#131a31;box-shadow:inset 0 0 0 1px #263356;color:#fff}
-main{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
-.drawer{position:fixed;left:0;right:0;bottom:-100%;background:var(--panel);border-top:1px solid var(--line);border-top-left-radius:14px;border-top-right-radius:14px;box-shadow:0 -10px 30px rgba(0,0,0,.35);transition:transform .25s ease-out;transform:translateY(100%);z-index:60}
+.good{color:var(--ok)} .bad{color:var(--bad)}
+/* Dashboard tiles */
+.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.tile{background:linear-gradient(180deg,var(--chip),#0f1a33);border:1px solid var(--line);border-radius:12px;padding:12px}
+.tile h3{margin:0 0 6px;font-size:13px;color:#b8c7ea}
+.tile .big{font-size:22px;font-weight:800}
+.progress{height:8px;border-radius:999px;background:#0c1427;overflow:hidden;border:1px solid #1e2a44}
+.progress>span{display:block;height:100%;background:linear-gradient(90deg,#22d3ee,#60a5fa);width:0%}
+/* compact budget inputs */
+.bud-inp{width:100%;max-width:160px;text-align:right}
+/* Floating Add button */
+.fab{position:fixed;right:16px;bottom:calc(64px + env(safe-area-inset-bottom,0px));z-index:60;border:none;border-radius:999px;background:linear-gradient(135deg,#60a5fa,#22d3ee);color:#071529;font-weight:900;padding:14px 16px;box-shadow:0 10px 24px rgba(0,0,0,.35)}
+/* Bottom tab bar */
+footer.tabbar{position:fixed;left:0;right:0;bottom:0;z-index:55;background:rgba(10,14,24,.9);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px 6px calc(8px + env(safe-area-inset-bottom,0px))}
+.tabbar button{background:transparent;border:none;color:#cbd5ff;padding:6px 4px;border-radius:12px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabbar .ico{font-size:20px}.tabbar .lbl{font-size:12px}
+.tabbar button.active{background:#121a31;box-shadow:inset 0 0 0 1px #263356;color:#fff}
+/* Drawer */
+.drawer{position:fixed;left:0;right:0;bottom:-100%;background:var(--panel);border-top:1px solid var(--line);border-top-left-radius:14px;border-top-right-radius:14px;box-shadow:0 -10px 34px rgba(0,0,0,.4);transform:translateY(100%);transition:transform .25s ease;z-index:70}
 .drawer.open{transform:translateY(0);bottom:0}
-.drawer .cap{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);border-top-left-radius:14px;border-top-right-radius:14px}
+.drawer .cap{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line)}
 .drawer .body{padding:12px 14px}
+/* Accessibility + motion */
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
 @media (max-width:420px){
-  .hero h2{font-size:16px}
-  th,td{padding:7px 6px}
-  input[type=number]{max-width:108px}
+  input[type=number]{max-width:160px}
 }
-
-/* === Compact Pro: larger text, tighter spacing, better use of screen === */
-body{font-size:16px; line-height:1.35}
-
-/* mini hero */
-.hero{padding:8px 12px; margin:6px 10px 8px; border-bottom-left-radius:12px; border-bottom-right-radius:12px}
-.hero-title{font-size:18px}
-.hero-sub{font-size:12px}
-.chips{gap:6px}
-.chip{padding:3px 8px; font-size:13px}
-
-/* cards & layout */
-.card{padding:10px; margin-bottom:8px; border-radius:12px; box-shadow:0 6px 16px rgba(0,0,0,.18)}
-.row{gap:8px}
-
-/* form controls (bigger text, not tall) */
-input,select,textarea{
-  font-size:17px;           /* prevents iOS zoom + makes text bigger */
-  padding:10px 12px;
-  height:44px;              /* comfortable tap height */
-  border-radius:12px;
-}
-input[type="month"],input[type="date"]{height:40px; padding:8px 10px}
-input[type="number"]{max-width:140px}
-
-/* table density: bigger font, less padding */
-th,td{padding:6px 6px; font-size:15px}
-tbody tr:nth-child(odd){background:rgba(255,255,255,.015)}
-tfoot td{padding-top:8px}
-
-/* pills + labels */
-.pill{padding:2px 8px; font-size:12px}
-
-/* bottom tab bar: slimmer but readable, frees content space */
-footer.tabbar{padding:4px 4px calc(6px + env(safe-area-inset-bottom,0px))}
-.tabbar .ico{font-size:20px}
-.tabbar .lbl{font-size:12px}
-main{padding-bottom:calc(80px + env(safe-area-inset-bottom,0px))}
 </style>
 </head>
 <body>
-<header><div class="header-inner"><div class="brand">My Simplifi • personal budget</div></div></header>
+<header><div class="header-inner"><div class="brand">My Simplifi • mobile budget</div></div></header>
 
-<!-- mini hero -->
-<div id="hero" class="hero">
-  <div class="hero-inner">
-    <div>
-      <h2 id="heroTitle">Budgets</h2>
-      <div id="heroSub" class="small">Plan your month</div>
-    </div>
-    <div class="chips">
-      <div class="chip">TBB: <span id="chipTBB" class="mono">$0</span></div>
-      <div class="chip">Income: <span id="chipINC" class="mono">$0</span></div>
-    </div>
-  </div>
-</div>
+<main id="view"></main>
 
-<main id="view" class="fade"></main>
+<!-- Floating Add -->
+<button id="fab" class="fab" aria-label="Add">＋ Add</button>
 
-<!-- bottom tabs -->
-<footer id="tabs" class="tabbar" role="tablist" aria-label="Primary">
-  <!-- buttons injected by JS -->
-</footer>
+<!-- Bottom tabs -->
+<footer id="tabs" class="tabbar" role="tablist" aria-label="Primary"></footer>
 
-<!-- universal add drawer -->
+<!-- Drawer -->
 <div id="drawer" class="drawer" aria-hidden="true">
-  <div class="cap">
-    <strong id="drawerTitle">Add</strong>
-    <button id="closeDrawer" class="btn ghost">Close</button>
-  </div>
+  <div class="cap"><strong id="drawerTitle">Add</strong><button id="drawerClose" class="tabbar button" style="background:transparent;border:1px solid var(--line);padding:6px 10px;border-radius:10px;color:#d6e4ff">Close</button></div>
   <div class="body" id="drawerBody"></div>
 </div>
 
 <script>
-/* ===== BASICS ===== */
+/* ===== Utils ===== */
 const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>Array.from(e.querySelectorAll(s));
-const cash=n=>(isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
+const money=n=>(isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
 const monthKey=d=>{const dt=d instanceof Date?d:new Date(d);return dt.toISOString().slice(0,7)};
 const start=(y,m)=>new Date(y,m-1,1), end=(y,m)=>new Date(y,m,0,23,59,59,999);
 const inMonth=(d,y,m)=>{const t=new Date(d);return t>=start(y,m)&&t<=end(y,m)};
 const id=()=>crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36).slice(2)+Date.now());
 const NOW=new Date(), CURR=monthKey(NOW);
-function setSticky(){const h=document.querySelector('header')?.getBoundingClientRect().height||0;const hero=document.getElementById('hero')?.getBoundingClientRect().height||0;document.documentElement.style.setProperty('--sticky-top',Math.round(h+hero)+'px')}
-window.addEventListener('resize',setSticky);document.addEventListener('DOMContentLoaded',setSticky);
 
-/* ===== DATA (zeroed) ===== */
-const STORE="mysimplifi-compact-v1";
+function setStickyTop(){
+  const headH=document.querySelector('header')?.getBoundingClientRect().height||0;
+  document.documentElement.style.setProperty('--sticky-top', Math.round(headH+8)+'px');
+}
+window.addEventListener('resize', setStickyTop);
+document.addEventListener('DOMContentLoaded', setStickyTop);
+
+/* ===== Data (zeroed) ===== */
+const STORE="mysimplifi-mobile-v2";
 const seed={
   settings:{twoUsers:false,rollover:false,efSingle:6,efDual:3},
   accounts:[{id:id(),name:"Checking",type:"Checking",opening:0},{id:id(),name:"Credit Card",type:"Credit Card",opening:0}],
@@ -171,57 +117,82 @@ const seed={
 };
 let DB=load()||seed; save();
 
-/* ===== HELPERS ===== */
+/* ===== Helpers ===== */
 const getCat=n=>DB.categories.find(c=>c.name===n);
-const groups=()=>DB.categories.reduce((m,c)=>{if(c.isIncome)return m;(m[c.group]??=[]).push(c);return m;}, {});
+const groupMap=()=>DB.categories.reduce((m,c)=>{if(c.isIncome)return m;(m[c.group]??=[]).push(c);return m;}, {});
 const txns=(y,m)=>DB.transactions.filter(t=>inMonth(t.date,y,m));
 const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
-function bal(name){const a=DB.accounts.find(x=>x.name===name);const base=a?.opening||0;const inf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));const outf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));return base+inf-outf;}
-function income(y,m){return sum(txns(y,m).filter(t=>getCat(t.category)?.isIncome).map(t=>+t.inflow||0))}
-function act(cat,y,m){const t=txns(y,m).filter(t=>t.category===cat);return sum(t.map(t=>+t.outflow||0))-sum(t.map(t=>+t.inflow||0))}
-function bud(cat,y,m){const k=`${y}-${String(m).padStart(2,'0')}`, pg=DB.budgets[k]||{};return +pg[cat]||0}
-function budTot(y,m){let t=0;const g=groups();for(const k in g) g[k].forEach(c=>t+=bud(c.name,y,m));return t}
-function prevAvail(cat,y,m){const d=new Date(y,m-2,1);if(d.getFullYear()<2000)return 0;const py=d.getFullYear(),pm=d.getMonth()+1;return prevAvail(cat,py,pm)+bud(cat,py,pm)-act(cat,py,pm)}
-function avail(cat,y,m){const v=bud(cat,y,m)-act(cat,y,m);return DB.settings.rollover?prevAvail(cat,y,m)+v:v}
-const TBB=(y,m)=>income(y,m)-budTot(y,m);
+function acctBal(name){const a=DB.accounts.find(x=>x.name===name);const base=a?.opening||0;const inflow=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));const outflow=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));return base+inflow-outflow;}
+function monthIncome(y,m){return sum(txns(y,m).filter(t=>getCat(t.category)?.isIncome).map(t=>+t.inflow||0))}
+function activity(cat,y,m){const t=txns(y,m).filter(t=>t.category===cat);return sum(t.map(t=>+t.outflow||0))-sum(t.map(t=>+t.inflow||0))}
+function budgeted(cat,y,m){const key=`${y}-${String(m).padStart(2,'0')}`, pg=DB.budgets[key]||{}; return +pg[cat]||0}
+function totalBudgeted(y,m){let t=0; const g=groupMap(); for(const k in g) g[k].forEach(c=>t+=budgeted(c.name,y,m)); return t}
+function prevAvail(cat,y,m){const d=new Date(y,m-2,1); if(d.getFullYear()<2000) return 0; const py=d.getFullYear(), pm=d.getMonth()+1; return prevAvail(cat,py,pm)+budgeted(cat,py,pm)-activity(cat,py,pm)}
+function available(cat,y,m){const v=budgeted(cat,y,m)-activity(cat,y,m); return DB.settings.rollover?prevAvail(cat,y,m)+v:v}
+const TBB=(y,m)=> monthIncome(y,m)-totalBudgeted(y,m);
 
-/* ===== LAYOUT / ROUTER ===== */
-const heroTitle=$("#heroTitle"), heroSub=$("#heroSub"), chipT=$("#chipTBB"), chipI=$("#chipINC");
+/* ===== Layout: Tabs + FAB + Drawer ===== */
+const view=$("#view"), tabs=$("#tabs"), fab=$("#fab"), drawer=$("#drawer"), dTitle=$("#drawerTitle"), dBody=$("#drawerBody");
+$("#drawerClose").onclick=()=>drawer.classList.remove("open");
+function openDrawer(title,html){dTitle.textContent=title; dBody.innerHTML=html; drawer.classList.add("open");}
 const TABS=[
-  {key:"Budgets",icon:"📊",view:"Budget",title:"Budgets",sub:"Plan your month"},
-  {key:"Spend",icon:"💸",view:"Transactions",title:"Expenses",sub:"Track spending"},
-  {key:"Income",icon:"💵",view:"Transactions",title:"Income",sub:"Log paychecks"},
-  {key:"Accounts",icon:"🏦",view:"Accounts",title:"Accounts",sub:"Balances"},
-  {key:"Reports",icon:"📈",view:"Summary",title:"Reports",sub:"Cash flow & ratios"},
-  {key:"Settings",icon:"⚙️",view:"Settings",title:"Settings",sub:"Preferences & data"}
+  {key:"Home",icon:"🏠",view:"Home"},
+  {key:"Budgets",icon:"📊",view:"Budget"},
+  {key:"Spend",icon:"💸",view:"Transactions"},
+  {key:"Income",icon:"💵",view:"Income"},
+  {key:"Accounts",icon:"🏦",view:"Accounts"},
+  {key:"Settings",icon:"⚙️",view:"Settings"}
 ];
-const tabsEl=$("#tabs"); TABS.forEach((t,i)=>{const b=document.createElement("button");b.setAttribute("role","tab");b.innerHTML=`<div class="ico">${t.icon}</div><div class="lbl">${t.key}</div>`;b.onclick=()=>route(t.view,t); if(i===0) b.classList.add("active"); tabsEl.appendChild(b);});
-function setActiveTab(key){$$(".tabbar button").forEach((b,i)=>b.classList.toggle("active",TABS[i].key===key))}
-const view=$("#view");
-function route(name,meta){
-  if(meta){heroTitle.textContent=meta.title; heroSub.textContent=meta.sub; setActiveTab(meta.key);}
-  if(name==="Budget") renderBudget();
-  else if(name==="Transactions") renderTransactions();
-  else if(name==="Accounts") renderAccounts();
-  else if(name==="Summary") renderSummary();
-  else renderSettings();
-  // update chips
-  const [y,m]=CURR.split("-").map(Number); chipT.textContent=cash(TBB(y,m)); chipI.textContent=cash(income(y,m));
-  setSticky();
+TABS.forEach((t,i)=>{const b=document.createElement("button");b.innerHTML=`<div class="ico">${t.icon}</div><div class="lbl">${t.key}</div>`;b.onclick=()=>route(t.view); if(i===0) b.classList.add("active"); tabs.appendChild(b);});
+function setActiveTab(name){$$(".tabbar button").forEach((b,i)=>b.classList.toggle("active",TABS[i].view===name))}
+
+/* ===== Views ===== */
+function renderHome(){
+  const [y,m]=CURR.split("-").map(Number);
+  const inc=monthIncome(y,m), out=sum(txns(y,m).map(t=>+t.outflow||0)), cf=inc-out;
+  // EF progress target = months * non-savings budget plan
+  let planExp=0; const gm=groupMap(); for(const g in gm){ if(g==="Savings") continue; gm[g].forEach(c=>planExp+=budgeted(c.name,y,m)); }
+  const efMonths=DB.settings.twoUsers?DB.settings.efDual:DB.settings.efSingle;
+  const efTarget=planExp*efMonths, efCurrent=available("Emergency Fund",y,m), efPct = efTarget? Math.max(0,Math.min(100, Math.round(efCurrent/efTarget*100))) : 0;
+
+  view.innerHTML=`
+    <div class="grid">
+      <div class="tile"><h3>To Be Budgeted</h3><div class="big mono">${money(TBB(y,m))}</div></div>
+      <div class="tile"><h3>Cash Flow</h3><div class="big mono ${cf<0?'bad':'good'}">${money(cf)}</div></div>
+      <div class="tile"><h3>Income (this month)</h3><div class="big mono">${money(inc)}</div></div>
+      <div class="tile"><h3>Outflows (this month)</h3><div class="big mono">${money(out)}</div></div>
+      <div class="tile" style="grid-column:1/-1">
+        <h3>Emergency Fund</h3>
+        <div class="row" style="align-items:center;gap:10px">
+          <div class="mono">${money(efCurrent)} / ${money(efTarget)}</div>
+          <div class="progress" style="flex:1 1 auto"><span style="width:${efPct}%"></span></div>
+          <div class="mono" style="min-width:40px;text-align:right">${efPct}%</div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="row">
+        <div style="flex:1 1 220px">
+          <label>Quick Actions</label>
+          <div class="row" style="gap:8px">
+            <button class="tabbar button" style="border:1px solid var(--line);padding:10px;border-radius:10px" id="qaExpense">+ Expense</button>
+            <button class="tabbar button" style="border:1px solid var(--line);padding:10px;border-radius:10px" id="qaIncome">+ Income</button>
+            <button class="tabbar button" style="border:1px solid var(--line);padding:10px;border-radius:10px" id="qaBudget">Open Budgets</button>
+          </div>
+        </div>
+      </div>
+    </div>`;
+  $("#qaExpense").onclick=()=>openExpenseDrawer();
+  $("#qaIncome").onclick=()=>openIncomeDrawer();
+  $("#qaBudget").onclick=()=>route("Budget");
 }
 
-/* ===== UNIVERSAL ADD DRAWER ===== */
-const drawer=$("#drawer"), drawerTitle=$("#drawerTitle"), drawerBody=$("#drawerBody");
-$("#closeDrawer").onclick=()=>drawer.classList.remove("open");
-function openDrawer(title,contentHTML){drawerTitle.textContent=title; drawerBody.innerHTML=contentHTML; drawer.classList.add("open");}
-
-/* ===== VIEWS ===== */
 function renderBudget(){
   view.innerHTML=`
     <div class="card">
-      <label for="mPick">Month</label>
-      <input id="mPick" type="month" value="${CURR}" aria-label="Budget month">
-      <small class="muted">Set Budgeted amounts. Available = Budgeted − Activity ${DB.settings.rollover?"(with rollover)":"(no rollover)"}.</small>
+      <label>Month</label>
+      <input id="mPick" type="month" value="${CURR}">
+      <small class="muted">Budget per category. Available = Budgeted − Activity ${DB.settings.rollover?"(rollover on)":"(no rollover)"}.</small>
     </div>
     <div class="card">
       <table class="table"><thead>
@@ -234,22 +205,22 @@ function renderBudget(){
   const draw=()=>{
     const [y,m]=mEl.value.split("-").map(Number);
     const body=$("#bBody"); body.innerHTML=""; let TB=0,TA=0,TV=0;
-    const g=groups(); Object.keys(g).sort().forEach(grp=>{
-      const trh=document.createElement("tr"); trh.innerHTML=`<th>${grp}</th><th></th><th></th><th></th><th></th>`; body.appendChild(trh);
-      g[grp].forEach(c=>{
-        const b=bud(c.name,y,m), a=act(c.name,y,m), v=avail(c.name,y,m);
+    const gm=groupMap(); Object.keys(gm).sort().forEach(gr=>{
+      const trh=document.createElement("tr"); trh.innerHTML=`<th>${gr}</th><th></th><th></th><th></th><th></th>`; body.appendChild(trh);
+      gm[gr].forEach(c=>{
+        const b=budgeted(c.name,y,m), a=activity(c.name,y,m), v=available(c.name,y,m);
         TB+=b; TA+=a; TV+=v;
-        const r=document.createElement("tr");
-        r.innerHTML=`
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
           <td></td><td>${c.name}</td>
-          <td class="right"><input class="mono" style="width:110px;text-align:right" type="number" step="0.01" value="${b}" data-cat="${c.name}" aria-label="Budgeted ${c.name}"></td>
-          <td class="right mono">${cash(a)}</td>
-          <td class="right mono ${v<0?'bad':'good'}">${cash(v)}</td>`;
-        body.appendChild(r);
+          <td class="right"><input class="bud-inp mono" type="number" step="0.01" value="${b}" data-cat="${c.name}"></td>
+          <td class="right mono">${money(a)}</td>
+          <td class="right mono ${v<0?'bad':'good'}">${money(v)}</td>`;
+        body.appendChild(tr);
       });
     });
-    $("#bTot").textContent=cash(TB); $("#aTot").textContent=cash(TA); $("#vTot").textContent=cash(TV);
-    $$('input[data-cat]',body).forEach(i=>i.onchange=e=>{
+    $("#bTot").textContent=money(TB); $("#aTot").textContent=money(TA); $("#vTot").textContent=money(TV);
+    $$('input[data-cat]',body).forEach(inp=>inp.onchange=e=>{
       const cat=e.target.dataset.cat,val=parseFloat(e.target.value||"0"), key=mEl.value;
       DB.budgets[key]=DB.budgets[key]||{}; DB.budgets[key][cat]=val; save(); draw();
     });
@@ -258,86 +229,83 @@ function renderBudget(){
 }
 
 function renderTransactions(){
+  // expense-focused list (non-income)
   view.innerHTML=`
     <div class="row">
-      <div class="card" style="flex:2 1 360px">
-        <label>Filter Month</label>
-        <input id="txMonth" type="month" value="${CURR}">
-      </div>
-      <div class="card" style="flex:1 1 240px">
-        <label>Quick Add</label>
-        <button id="addExpense" class="btn" style="width:100%">Add Expense</button>
-        <button id="addIncome" class="btn ghost" style="width:100%;margin-top:8px">Add Income</button>
+      <div class="card" style="flex:2 1 360px"><label>Filter Month</label><input id="txMonth" type="month" value="${CURR}"></div>
+      <div class="card" style="flex:1 1 220px"><label>Fast Add</label>
+        <button id="addExpense" style="width:100%;height:44px;border-radius:10px;border:1px solid var(--line);background:#12203a;color:#e8f0ff">+ Expense</button>
       </div>
     </div>
     <div class="card">
-      <table class="table">
-        <thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
-        <tbody id="txBody"></tbody>
-      </table>
+      <table class="table"><thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th class="right">Outflow</th><th></th></tr></thead>
+      <tbody id="txBody"></tbody></table>
     </div>`;
-  const acctOpts = DB.accounts.map(a=>`<option>${a.name}</option>`).join('');
-  const catOpts  = DB.categories.map(c=>`<option value="${c.name}">${c.group}: ${c.name}</option>`).join('');
-  $("#addExpense").onclick=()=>openDrawer("Add Expense",`
-      <div class="row">
-        <div style="flex:1 1 160px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
-        <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
-      </div>
-      <label>Payee</label><input id="dPayee" placeholder="Merchant">
-      <label>Category</label><select id="dCat">${catOpts}</select>
-      <label>Amount (Outflow)</label><input id="dOut" type="number" step="0.01" placeholder="0.00">
-      <button id="dSave" class="btn" style="margin-top:10px;width:100%">Add Expense</button>
-  `);
-  $("#addIncome").onclick=()=>openDrawer("Add Income",`
-      <div class="row">
-        <div style="flex:1 1 160px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
-        <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
-      </div>
-      <label>Payee</label><input id="dPayee" placeholder="Employer">
-      <label>Category</label><select id="dCat"><option value="Income">Income</option></select>
-      <label>Amount (Inflow)</label><input id="dIn" type="number" step="0.01" placeholder="0.00">
-      <button id="dSave" class="btn" style="margin-top:10px;width:100%">Add Income</button>
-  `);
-
-  drawerBody.addEventListener('click',e=>{
-    if(e.target && e.target.id==="dSave"){
-      const date=$("#dDate").value, account=$("#dAcct").value, payee=$("#dPayee").value, cat=$("#dCat").value;
-      const out=parseFloat($("#dOut")?.value||"0"), inn=parseFloat($("#dIn")?.value||"0");
-      if(!(out||inn)) return alert("Enter an amount.");
-      DB.transactions.push({id:id(),date,accountName:account,payee,category:cat,outflow:out,inflow:inn,cleared:true});
-      save(); drawer.classList.remove("open"); draw();
-    }
-  });
+  $("#addExpense").onclick=()=>openExpenseDrawer();
 
   const mEl=$("#txMonth");
   const draw=()=>{
     const [y,m]=mEl.value.split("-").map(Number);
     const body=$("#txBody"); body.innerHTML="";
-    DB.transactions.filter(t=>inMonth(t.date,y,m)).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(t=>{
-      const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td class="mono">${t.date}</td><td>${t.accountName}</td><td>${t.payee||""}</td><td>${t.category||""}</td>
-        <td class="right mono">${t.outflow?cash(t.outflow):""}</td><td class="right mono">${t.inflow?cash(t.inflow):""}</td>
-        <td class="right"><button class="btn ghost" data-del="${t.id}">Delete</button></td>`;
-      body.appendChild(tr);
-    });
+    DB.transactions.filter(t=>inMonth(t.date,y,m)&&!getCat(t.category)?.isIncome)
+      .sort((a,b)=>new Date(a.date)-new Date(b.date))
+      .forEach(t=>{
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+          <td class="mono">${t.date}</td><td>${t.accountName}</td><td>${t.payee||""}</td><td>${t.category||""}</td>
+          <td class="right mono">${t.outflow?money(t.outflow):""}</td>
+          <td class="right"><button class="tabbar button" data-del="${t.id}" style="border:1px solid var(--line);padding:6px 10px;border-radius:8px">Delete</button></td>`;
+        body.appendChild(tr);
+      });
     $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.transactions=DB.transactions.filter(t=>t.id!==b.dataset.del); save(); draw();});
-    setSticky();
+    setStickyTop();
+  };
+  mEl.onchange=draw; draw();
+}
+
+function renderIncome(){
+  view.innerHTML=`
+    <div class="row">
+      <div class="card" style="flex:2 1 360px"><label>Filter Month</label><input id="txMonth" type="month" value="${CURR}"></div>
+      <div class="card" style="flex:1 1 220px"><label>Fast Add</label>
+        <button id="addIncome" style="width:100%;height:44px;border-radius:10px;border:1px solid var(--line);background:#12203a;color:#e8f0ff">+ Income</button>
+      </div>
+    </div>
+    <div class="card">
+      <table class="table"><thead><tr><th>Date</th><th>Account</th><th>Payee</th><th class="right">Inflow</th><th></th></tr></thead>
+      <tbody id="txBody"></tbody></table>
+    </div>`;
+  $("#addIncome").onclick=()=>openIncomeDrawer();
+
+  const mEl=$("#txMonth");
+  const draw=()=>{
+    const [y,m]=mEl.value.split("-").map(Number);
+    const body=$("#txBody"); body.innerHTML="";
+    DB.transactions.filter(t=>inMonth(t.date,y,m)&&getCat(t.category)?.isIncome)
+      .sort((a,b)=>new Date(a.date)-new Date(b.date))
+      .forEach(t=>{
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+          <td class="mono">${t.date}</td><td>${t.accountName}</td><td>${t.payee||""}</td>
+          <td class="right mono">${t.inflow?money(t.inflow):""}</td>
+          <td class="right"><button class="tabbar button" data-del="${t.id}" style="border:1px solid var(--line);padding:6px 10px;border-radius:8px">Delete</button></td>`;
+        body.appendChild(tr);
+      });
+    $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.transactions=DB.transactions.filter(t=>t.id!==b.dataset.del); save(); draw();});
+    setStickyTop();
   };
   mEl.onchange=draw; draw();
 }
 
 function renderAccounts(){
   view.innerHTML=`
-    <div class="row">
-      <div class="card" style="flex:2 1 360px">
-        <label>Add Account</label>
-        <div class="row" style="gap:8px">
-          <div style="flex:1 1 160px"><input id="accName" placeholder="Name (e.g., Checking)"></div>
-          <div style="flex:1 1 140px"><select id="accType"><option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option></select></div>
-          <div style="flex:1 1 120px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
-          <div><button id="accAdd" class="btn">Add</button></div>
-        </div>
+    <div class="card">
+      <label>Add Account</label>
+      <div class="row" style="gap:8px">
+        <div style="flex:1 1 160px"><input id="accName" placeholder="Name (e.g., Checking)"></div>
+        <div style="flex:1 1 140px"><select id="accType"><option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option></select></div>
+        <div style="flex:1 1 120px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
+        <div><button id="accAdd" style="height:44px;border-radius:10px;border:1px solid var(--line);padding:0 14px;background:#12203a;color:#e8f0ff">Add</button></div>
       </div>
     </div>
     <div class="card">
@@ -348,109 +316,143 @@ function renderAccounts(){
     const body=$("#accBody"); body.innerHTML="";
     DB.accounts.forEach(a=>{
       const tr=document.createElement("tr");
-      tr.innerHTML=`<td>${a.name}</td><td>${a.type}</td><td class="right mono">${cash(a.opening||0)}</td><td class="right mono">${cash(bal(a.name))}</td>
-      <td class="right"><button class="btn ghost" data-del="${a.id}">Delete</button></td>`;
+      tr.innerHTML=`<td>${a.name}</td><td>${a.type}</td><td class="right mono">${money(a.opening||0)}</td><td class="right mono">${money(acctBal(a.name))}</td>
+      <td class="right"><button class="tabbar button" data-del="${a.id}" style="border:1px solid var(--line);padding:6px 10px;border-radius:8px">Delete</button></td>`;
       body.appendChild(tr);
     });
     $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.accounts=DB.accounts.filter(x=>x.id!==b.dataset.del); save(); draw();});
   };
   $("#accAdd").onclick=()=>{
-    const n=$("#accName").value.trim(); if(!n) return alert("Name?"); 
+    const n=$("#accName").value.trim(); if(!n) return alert("Name?");
     DB.accounts.push({id:id(),name:n,type:$("#accType").value,opening:parseFloat($("#accOpen").value||"0")}); save(); draw();
   };
   draw();
 }
 
-function renderSummary(){
-  const [y,m]=CURR.split("-").map(Number);
-  const inc=income(y,m), out=sum(txns(y,m).map(t=>+t.outflow||0)), cf=inc-out;
-  let plan=0; const g=groups(); for(const k in g){ if(k==="Savings") continue; g[k].forEach(c=>plan+=bud(c.name,y,m)); }
-  const efM=DB.settings.twoUsers?DB.settings.efDual:DB.settings.efSingle;
-  const housing=bud("Rent",y,m)+bud("Electricity",y,m)+bud("Water/Sewer",y,m)+bud("Gas/Heating",y,m)+bud("Internet",y,m);
-  const debt=bud("Loan Payments",y,m);
-  view.innerHTML=`
-    <div class="row">
-      <div class="card"><div class="pill p-ok">Income</div><div class="mono" style="font-size:22px;margin-top:6px">${cash(inc)}</div></div>
-      <div class="card"><div class="pill p-bad">Outflows</div><div class="mono" style="font-size:22px;margin-top:6px">${cash(out)}</div></div>
-      <div class="card"><div class="pill p-blue">Cash Flow</div><div class="mono ${cf<0?'bad':'good'}" style="font-size:22px;margin-top:6px">${cash(cf)}</div></div>
-    </div>
-    <div class="row">
-      <div class="card"><b>Housing %</b><div class="mono">${inc?(housing/inc*100).toFixed(1):"0.0"}%</div></div>
-      <div class="card"><b>Debt %</b><div class="mono">${inc?(debt/inc*100).toFixed(1):"0.0"}%</div></div>
-      <div class="card"><b>Savings Rate (planned)</b><div class="mono">${inc?((bud("Emergency Fund",y,m)+bud("Retirement",y,m)+bud("Investments",y,m))/inc*100).toFixed(1):"0.0"}%</div></div>
-    </div>
-    <div class="card">
-      <b>Emergency Fund</b>
-      <div style="margin-top:6px">Target (${efM} mo): <span class="mono">${cash(plan*efM)}</span></div>
-      <div style="margin-top:6px">Current EF: <span class="mono">${cash(avail("Emergency Fund",y,m))}</span></div>
-      <div style="margin-top:6px">Gap: <span class="mono">${cash(plan*efM - avail("Emergency Fund",y,m))}</span></div>
-    </div>`;
-}
-
 function renderSettings(){
+  const [y,m]=CURR.split("-").map(Number);
+  const housing=budgeted("Rent",y,m)+budgeted("Electricity",y,m)+budgeted("Water/Sewer",y,m)+budgeted("Gas/Heating",y,m)+budgeted("Internet",y,m);
+  const debt=budgeted("Loan Payments",y,m);
   view.innerHTML=`
     <div class="row">
-      <div class="card"><label>Rollover Available</label>
+      <div class="card" style="flex:1 1 320px">
+        <label>Rollover Available</label>
         <select id="roll"><option value="false">Off</option><option value="true">On (YNAB-style)</option></select>
         <small class="muted">When ON, Available carries forward.</small>
       </div>
-      <div class="card"><label>Household</label>
+      <div class="card" style="flex:1 1 320px">
+        <label>Household</label>
         <select id="users"><option value="1">One</option><option value="2">Two</option></select>
         <small class="muted">EF target: 6 months (one) / 3 months (two).</small>
       </div>
     </div>
     <div class="row">
       <div class="card" style="flex:2 1 460px">
-        <label>Add Category</label>
+        <label>Categories</label>
         <div class="row" style="gap:8px">
           <div style="flex:1 1 180px"><input id="catName" placeholder="Category name"></div>
           <div style="flex:1 1 160px"><input id="catGroup" placeholder="Group (e.g., Food)"></div>
-          <div><button id="catAdd" class="btn">Add</button></div>
+          <div><button id="catAdd" style="height:44px;border-radius:10px;border:1px solid var(--line);padding:0 14px;background:#12203a;color:#e8f0ff">Add</button></div>
         </div>
-        <table class="table" style="margin-top:8px">
-          <thead><tr><th>Group</th><th>Name</th><th>Income?</th><th></th></tr></thead>
-          <tbody id="catBody"></tbody>
-        </table>
+        <table class="table" style="margin-top:8px"><thead><tr><th>Group</th><th>Name</th><th>Income?</th><th></th></tr></thead>
+        <tbody id="catBody"></tbody></table>
       </div>
       <div class="card" style="flex:1 1 320px">
         <label>Data</label>
         <textarea id="imp" placeholder="Paste JSON to import" style="width:100%;height:120px"></textarea>
         <div class="row" style="gap:8px;margin-top:8px">
-          <button class="btn" id="exp">Export</button>
-          <button class="btn ghost" id="impBtn">Import</button>
-          <button class="btn ghost" id="reset">Reset</button>
+          <button id="exp" style="height:44px;border-radius:10px;border:1px solid var(--line);padding:0 14px;background:#12203a;color:#e8f0ff">Export</button>
+          <button id="impBtn" style="height:44px;border-radius:10px;border:1px solid var(--line);padding:0 14px;background:#12203a;color:#e8f0ff">Import</button>
+          <button id="reset" style="height:44px;border-radius:10px;border:1px solid var(--line);padding:0 14px;background:#12203a;color:#e8f0ff">Reset</button>
         </div>
       </div>
+    </div>
+    <div class="card">
+      <b>Ratios (planned)</b>
+      <div class="row" style="margin-top:8px;gap:10px">
+        <div class="tile"><h3>Housing %</h3><div class="big mono">${ratio(housing)}</div></div>
+        <div class="tile"><h3>Debt %</h3><div class="big mono">${ratio(debt)}</div></div>
+        <div class="tile"><h3>Savings %</h3><div class="big mono">${ratio(budgeted("Emergency Fund",y,m)+budgeted("Retirement",y,m)+budgeted("Investments",y,m))}</div></div>
+      </div>
     </div>`;
-  $("#roll").value=String(DB.settings.rollover);
-  $("#users").value=DB.settings.twoUsers?"2":"1";
+  function ratio(n){const inc=monthIncome(y,m); return (inc? (n/inc*100):0).toFixed(1)+'%';}
+  $("#roll").value=String(DB.settings.rollover); $("#users").value=DB.settings.twoUsers?"2":"1";
   $("#roll").onchange=e=>{DB.settings.rollover=(e.target.value==="true"); save();};
   $("#users").onchange=e=>{DB.settings.twoUsers=(e.target.value==="2"); save();};
-  $("#catAdd").onclick=()=>{
-    const n=$("#catName").value.trim(); if(!n) return alert("Name?");
-    DB.categories.push({id:id(),name:n,group:$("#catGroup").value.trim()||"Other",isIncome:false}); save(); renderSettings();
-  };
+  $("#catAdd").onclick=()=>{const n=$("#catName").value.trim(); if(!n) return alert("Name?"); DB.categories.push({id:id(),name:n,group:($("#catGroup").value.trim()||"Other"),isIncome:false}); save(); renderSettings();};
   const body=$("#catBody");
   DB.categories.sort((a,b)=>(a.group+a.name).localeCompare(b.group+b.name)).forEach(c=>{
     const tr=document.createElement("tr");
     tr.innerHTML=`<td>${c.group}</td><td>${c.name}</td>
       <td><input type="checkbox" ${c.isIncome?'checked':''} data-inc="${c.id}"></td>
-      <td class="right"><button class="btn ghost" data-del="${c.id}">Delete</button></td>`;
+      <td class="right"><button class="tabbar button" data-del="${c.id}" style="border:1px solid var(--line);padding:6px 10px;border-radius:8px">Delete</button></td>`;
     body.appendChild(tr);
   });
   $$('input[data-inc]',body).forEach(ch=>ch.onchange=e=>{const C=DB.categories.find(x=>x.id===e.target.dataset.inc); C.isIncome=e.target.checked; save();});
   $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.categories=DB.categories.filter(x=>x.id!==b.dataset.del); save(); renderSettings();});
-  $("#exp").onclick=()=>{const j=JSON.stringify(DB,null,2); navigator.clipboard?.writeText(j); alert("JSON copied to clipboard");};
-  $("#impBtn").onclick=()=>{try{DB=JSON.parse($("#imp").value); save(); alert("Imported"); route("Budget",TABS[0]);}catch(e){alert("Invalid JSON")}};
-  $("#reset").onclick=()=>{if(!confirm("Reset to factory zeros?"))return; DB=JSON.parse(JSON.stringify(seed)); save(); route("Budget",TABS[0]);};
+  $("#exp").onclick=()=>{const j=JSON.stringify(DB,null,2); navigator.clipboard?.writeText(j); alert("JSON copied");};
+  $("#impBtn").onclick=()=>{try{DB=JSON.parse($("#imp").value); save(); alert("Imported"); route("Home");}catch(e){alert("Invalid JSON")}};
+  $("#reset").onclick=()=>{if(!confirm("Reset to factory zeros?"))return; DB=JSON.parse(JSON.stringify(seed)); save(); route("Home");};
 }
 
-/* ===== STORAGE ===== */
-function save(){localStorage.setItem(STORE,JSON.stringify(DB))}
-function load(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
+/* ===== Quick Add Drawers ===== */
+function openExpenseDrawer(){
+  const acctOpts=DB.accounts.map(a=>`<option>${a.name}</option>`).join('');
+  const catOpts=DB.categories.filter(c=>!c.isIncome).map(c=>`<option value="${c.name}">${c.group}: ${c.name}</option>`).join('');
+  openDrawer("Add Expense",`
+    <div class="row" style="gap:8px">
+      <div style="flex:1 1 140px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
+    </div>
+    <label>Payee</label><input id="dPayee" placeholder="Merchant">
+    <label>Category</label><select id="dCat">${catOpts}</select>
+    <label>Amount (Outflow)</label><input id="dOut" type="number" step="0.01" placeholder="0.00">
+    <button id="dSave" style="width:100%;height:44px;border-radius:10px;border:1px solid var(--line);background:#12203a;color:#e8f0ff;margin-top:8px">Add Expense</button>
+  `);
+  dBody.querySelector("#dSave").onclick=()=>{
+    const t={id:id(),date:$("#dDate").value,accountName:$("#dAcct").value,payee:$("#dPayee").value,category:$("#dCat").value,outflow:parseFloat($("#dOut").value||"0"),inflow:0,cleared:true};
+    if(!t.outflow) return alert("Enter amount");
+    DB.transactions.push(t); save(); drawer.classList.remove("open"); route("Spend");
+  };
+}
+function openIncomeDrawer(){
+  const acctOpts=DB.accounts.map(a=>`<option>${a.name}</option>`).join('');
+  openDrawer("Add Income",`
+    <div class="row" style="gap:8px">
+      <div style="flex:1 1 140px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+      <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
+    </div>
+    <label>Payee</label><input id="dPayee" placeholder="Employer">
+    <label>Category</label><select id="dCat"><option>Income</option></select>
+    <label>Amount (Inflow)</label><input id="dIn" type="number" step="0.01" placeholder="0.00">
+    <button id="dSave" style="width:100%;height:44px;border-radius:10px;border:1px solid var(--line);background:#12203a;color:#e8f0ff;margin-top:8px">Add Income</button>
+  `);
+  dBody.querySelector("#dSave").onclick=()=>{
+    const t={id:id(),date:$("#dDate").value,accountName:$("#dAcct").value,payee:$("#dPayee").value,category:$("#dCat").value,outflow:0,inflow:parseFloat($("#dIn").value||"0"),cleared:true};
+    if(!t.inflow) return alert("Enter amount");
+    DB.transactions.push(t); save(); drawer.classList.remove("open"); route("Income");
+  };
+}
 
-/* ===== BOOT ===== */
-route("Budget", TABS[0]);
+/* ===== Router + FAB ===== */
+function route(name){
+  setActiveTab(name);
+  if(name==="Home") renderHome();
+  else if(name==="Budget") renderBudget();
+  else if(name==="Transactions"||name==="Spend") renderTransactions();
+  else if(name==="Income") renderIncome();
+  else if(name==="Accounts") renderAccounts();
+  else renderSettings();
+  setStickyTop();
+}
+fab.onclick=()=>openExpenseDrawer();
+
+/* ===== Storage ===== */
+function save(){localStorage.setItem(STORE, JSON.stringify(DB));}
+function load(){try{return JSON.parse(localStorage.getItem(STORE));}catch(e){return null;}}
+
+/* ===== Boot ===== */
+route("Home");
 </script>
 </body>
 </html>
