@@ -48,7 +48,43 @@
   .tabbar button{background:transparent;border:none;color:#cfd6ff;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:10px}
   .tabbar button .ico{font-size:18px;line-height:1}.tabbar button .lbl{font-size:11px}
   .tabbar button.active{background:#152042;color:#fff;box-shadow:inset 0 0 0 1px #243056}
-</style>
+</style>/* --- mobile fit / stop iOS zoom --- */
+html,body{overflow-x:hidden;-webkit-text-size-adjust:100%}
+input,select,textarea{font-size:16px}      /* prevents Safari zoom-on-focus */
+
+/* dynamic sticky header height (set by JS below) */
+:root{ --sticky-top: 108px; }
+th{ top: var(--sticky-top); }
+
+/* comfy on small screens */
+@media (max-width: 420px){
+  .hero{ padding:16px 14px; border-radius:16px }
+  .card{ padding:12px; border-radius:14px }
+  th,td{ padding:8px 6px; font-size:13.5px }
+  .tabbar button .lbl{ font-size:10.5px }
+}
+
+/* keep content above bottom tabs + iPhone safe area */
+footer.tabbar{ padding-bottom: calc(8px + env(safe-area-inset-bottom,0px)); }
+main{ padding-bottom: calc(96px + env(safe-area-inset-bottom,0px)); }// --- set sticky header offset based on actual header + hero height ---
+function setStickyTop(){
+  const headH = document.querySelector('header')?.getBoundingClientRect().height || 0;
+  const heroH = document.getElementById('hero')?.getBoundingClientRect().height || 0;
+  const top = Math.round(headH + heroH); // total pixels above the table
+  document.documentElement.style.setProperty('--sticky-top', top + 'px');
+}
+window.addEventListener('resize', setStickyTop);
+document.addEventListener('DOMContentLoaded', setStickyTop);function route(viewName, meta){
+  setActive(viewName);
+  if(meta){ HERO.t.textContent=meta.title; HERO.s.textContent=meta.sub; setActiveTab(meta.key); }
+  if(viewName==="Budget") renderBudget();
+  else if(viewName==="Transactions") renderTransactions();
+  else if(viewName==="Accounts") renderAccounts();
+  else if(viewName==="Summary") renderSummary();
+  else if(viewName==="Settings") renderSettings();
+  else if(viewName==="Data") renderData();
+  setStickyTop();
+}
 </head>
 <body>
 <header><h1>My Simplifi • personal budget</h1></header>
