@@ -2,102 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1"/>
-<title>My Simplifi • personal budget</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<title>My Simplifi • compact</title>
 <style>
-  :root{
-    --bg:#0e1117; --card:#141923; --muted:#9aa3b2; --text:#eef1f7;
-    --line:#222838; --acc:#6ee7b7; --acc2:#60a5fa; --bad:#f87171; --good:#34d399;
-    --sticky-top: 108px; /* JS recalculates this */
-  }
-  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
-  body{margin:0;background:linear-gradient(180deg,#0e1117,#0b0f1a);color:var(--text)}
-  header{position:sticky;top:0;z-index:20;background:#0f1422cc;backdrop-filter:blur(6px);
-    display:flex;align-items:center;justify-content:center;padding:12px 16px;border-bottom:1px solid var(--line)}
-  h1{margin:0;font-size:16px;letter-spacing:.2px}
-  /* gradient hero */
-  .hero{background:linear-gradient(135deg,#ff5576,#ff6a3d 40%,#ff9a3d);
-    padding:18px;border-bottom-left-radius:18px;border-bottom-right-radius:18px;color:#fff;
-    box-shadow:0 8px 20px rgba(0,0,0,.25);margin-bottom:14px}
-  .hero-title{font-size:26px;font-weight:800}
-  .hero-sub{opacity:.92;margin-top:6px;font-weight:500}
-
-  main{padding:18px;max-width:980px;margin:0 auto;padding-bottom:94px}
-  .card{background:linear-gradient(180deg,#12182a,#0f1422);border:1px solid var(--line);
-    border-radius:16px;padding:14px;margin-bottom:14px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
-  .row{display:flex;gap:12px;flex-wrap:wrap}
-  .row>.card{flex:1 1 300px}
-  label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-  input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1528;color:#fff;font-size:16px}
-  input[type="month"],input[type="date"]{padding:8px 10px}
-  table{width:100%;border-collapse:collapse}
-  th,td{padding:10px 8px;border-bottom:1px dashed #1e2536;font-size:14px}
-  th{color:#cfd7ff;background:#10162b;position:sticky;top:var(--sticky-top)}
-  tfoot td{border-top:1px solid var(--line);font-weight:700}
-  .right{text-align:right}.mono{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
-  .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
-  .p-green{background:rgba(110,231,183,.12);color:#6ee7b7}
-  .p-blue{background:rgba(96,165,250,.12);color:#60a5fa}
-  .p-red{background:rgba(248,113,113,.12);color:#f87171}
-  .btn{cursor:pointer;background:var(--acc2);color:#071222;border:none;border-radius:10px;padding:10px 12px;font-weight:700}
-  .btn.secondary{background:transparent;color:#fff;border:1px solid var(--line)}
-  .group{background:#10162b;font-weight:800}
-  .good{color:var(--good)} .bad{color:var(--bad)}
-  /* bottom tab bar */
-  footer.tabbar{position:fixed;left:0;right:0;bottom:0;background:#0d1222f2;backdrop-filter:blur(6px);
-    border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);
-    gap:4px;padding:8px 6px;z-index:30; padding-bottom: calc(8px + env(safe-area-inset-bottom,0px));}
-  .tabbar button{background:transparent;border:none;color:#cfd6ff;padding:6px 2px;display:flex;flex-direction:column;align-items:center;gap:4px;border-radius:10px}
-  .tabbar button .ico{font-size:18px;line-height:1}.tabbar button .lbl{font-size:11px}
-  .tabbar button.active{background:#152042;color:#fff;box-shadow:inset 0 0 0 1px #243056}
-  /* mobile tweaks */
-  @media (max-width:420px){
-    .hero{padding:16px 14px;border-radius:16px}
-    .card{padding:12px;border-radius:14px}
-    th,td{padding:8px 6px;font-size:13.5px}
-    .tabbar button .lbl{font-size:10.5px}
-    input[type="number"]{max-width:110px}
-  }
-  /* keep content above tab bar */
-  main{ padding-bottom: calc(96px + env(safe-area-inset-bottom,0px)); }
+:root{
+  --bg:#0b0f17; --panel:#111624; --panel2:#0e1422; --glass:rgba(20,26,42,.6);
+  --line:#20273a; --text:#eef2ff; --muted:#9aa3b2;
+  --pri:#7dd3fc; --ok:#34d399; --warn:#fbbf24; --bad:#fb7185;
+  --tab:#12182b; --sticky-top: 96px;
+}
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:radial-gradient(1200px 600px at 20% -10%,#10172a,transparent),linear-gradient(#0b0f17,#0b0f17)}
+body{color:var(--text);font:14px/1.45 ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+a,button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:2px solid var(--pri);outline-offset:2px}
+@media (prefers-reduced-motion:no-preference){
+  .fade{animation:fade .25s ease-out}
+  @keyframes fade{from{opacity:.001;transform:translateY(2px)}}
+}
+/* header + mini hero */
+header{position:sticky;top:0;z-index:40;background:rgba(8,12,22,.7);backdrop-filter:blur(10px);border-bottom:1px solid var(--line)}
+.header-inner{display:flex;align-items:center;justify-content:center;padding:10px 14px}
+.brand{font-weight:800;letter-spacing:.2px;font-size:15px}
+.hero{background:linear-gradient(135deg,#3b82f6, #22d3ee);color:#061122;border-bottom-left-radius:14px;border-bottom-right-radius:14px;margin:8px 12px 10px;box-shadow:0 8px 22px rgba(0,0,0,.22)}
+.hero-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 12px}
+.hero h2{margin:0;font-size:18px;letter-spacing:.2px}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.85);color:#061122;border-radius:999px;padding:4px 8px;font-weight:700}
+main{max-width:980px;margin:0 auto;padding:10px 12px 98px}
+.card{background:linear-gradient(180deg,var(--panel),var(--panel2));border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;box-shadow:0 8px 22px rgba(0,0,0,.18)}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>.card{flex:1 1 300px}
+label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
+input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0c1326;color:#fff;font-size:16px}
+input[type="month"],input[type="date"]{padding:8px 10px}
+small.muted{color:var(--muted);font-size:12px}
+.table{width:100%;border-collapse:separate;border-spacing:0}
+th,td{padding:8px 8px;border-bottom:1px dashed #1e2740;font-size:13.5px}
+th{position:sticky;top:var(--sticky-top);background:#0e162c;color:#cfe3ff;z-index:2}
+tbody tr:nth-child(odd){background:rgba(255,255,255,.02)}
+tfoot td{border-top:1px solid var(--line);font-weight:700}
+.right{text-align:right}
+.mono{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
+.pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
+.p-blue{background:rgba(125,211,252,.15);color:#7dd3fc}.p-ok{background:rgba(52,211,153,.18);color:#34d399}
+.p-bad{background:rgba(251,113,133,.15);color:#fb7185}
+.btn{background:var(--pri);color:#061122;border:none;border-radius:10px;padding:10px 12px;font-weight:800}
+.btn.ghost{background:transparent;border:1px solid var(--line);color:#d7e2ff}
+.good{color:#22c55e}.bad{color:#fb7185}
+footer.tabbar{position:fixed;left:0;right:0;bottom:0;background:rgba(10,14,24,.85);backdrop-filter:blur(10px);border-top:1px solid var(--line);display:grid;grid-template-columns:repeat(6,1fr);gap:4px;padding:6px 6px  calc(8px + env(safe-area-inset-bottom,0px));z-index:50}
+.tabbar button{background:transparent;border:none;color:#cbd5ff;padding:6px 4px;border-radius:10px;display:flex;flex-direction:column;align-items:center;gap:4px}
+.tabbar .ico{font-size:18px}.tabbar .lbl{font-size:11px}
+.tabbar button.active{background:#131a31;box-shadow:inset 0 0 0 1px #263356;color:#fff}
+main{padding-bottom:calc(92px + env(safe-area-inset-bottom,0px))}
+.drawer{position:fixed;left:0;right:0;bottom:-100%;background:var(--panel);border-top:1px solid var(--line);border-top-left-radius:14px;border-top-right-radius:14px;box-shadow:0 -10px 30px rgba(0,0,0,.35);transition:transform .25s ease-out;transform:translateY(100%);z-index:60}
+.drawer.open{transform:translateY(0);bottom:0}
+.drawer .cap{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:rgba(255,255,255,.02);border-bottom:1px solid var(--line);border-top-left-radius:14px;border-top-right-radius:14px}
+.drawer .body{padding:12px 14px}
+@media (max-width:420px){
+  .hero h2{font-size:16px}
+  th,td{padding:7px 6px}
+  input[type=number]{max-width:108px}
+}
 </style>
 </head>
 <body>
-<header><h1>My Simplifi • personal budget</h1></header>
+<header><div class="header-inner"><div class="brand">My Simplifi • personal budget</div></div></header>
 
-<!-- gradient header -->
+<!-- mini hero -->
 <div id="hero" class="hero">
-  <div id="heroTitle" class="hero-title">Budgets</div>
-  <div id="heroSub" class="hero-sub">Plan your month & To-Be-Budgeted</div>
+  <div class="hero-inner">
+    <div>
+      <h2 id="heroTitle">Budgets</h2>
+      <div id="heroSub" class="small">Plan your month</div>
+    </div>
+    <div class="chips">
+      <div class="chip">TBB: <span id="chipTBB" class="mono">$0</span></div>
+      <div class="chip">Income: <span id="chipINC" class="mono">$0</span></div>
+    </div>
+  </div>
 </div>
 
-<main id="view"></main>
+<main id="view" class="fade"></main>
 
 <!-- bottom tabs -->
-<footer id="tabs" class="tabbar"></footer>
+<footer id="tabs" class="tabbar" role="tablist" aria-label="Primary">
+  <!-- buttons injected by JS -->
+</footer>
+
+<!-- universal add drawer -->
+<div id="drawer" class="drawer" aria-hidden="true">
+  <div class="cap">
+    <strong id="drawerTitle">Add</strong>
+    <button id="closeDrawer" class="btn ghost">Close</button>
+  </div>
+  <div class="body" id="drawerBody"></div>
+</div>
 
 <script>
-/* ====== utils ====== */
+/* ===== BASICS ===== */
 const $=(s,e=document)=>e.querySelector(s), $$=(s,e=document)=>Array.from(e.querySelectorAll(s));
-const money=n=>(isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
+const cash=n=>(isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
 const monthKey=d=>{const dt=d instanceof Date?d:new Date(d);return dt.toISOString().slice(0,7)};
-const startOfMonth=(y,m)=>new Date(y,m-1,1), endOfMonth=(y,m)=>new Date(y,m,0,23,59,59,999);
-const inMonth=(d,y,m)=>{const dt=new Date(d);return dt>=startOfMonth(y,m)&&dt<=endOfMonth(y,m)};
+const start=(y,m)=>new Date(y,m-1,1), end=(y,m)=>new Date(y,m,0,23,59,59,999);
+const inMonth=(d,y,m)=>{const t=new Date(d);return t>=start(y,m)&&t<=end(y,m)};
 const id=()=>crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36).slice(2)+Date.now());
-const TODAY=new Date(), CURR=monthKey(TODAY);
+const NOW=new Date(), CURR=monthKey(NOW);
+function setSticky(){const h=document.querySelector('header')?.getBoundingClientRect().height||0;const hero=document.getElementById('hero')?.getBoundingClientRect().height||0;document.documentElement.style.setProperty('--sticky-top',Math.round(h+hero)+'px')}
+window.addEventListener('resize',setSticky);document.addEventListener('DOMContentLoaded',setSticky);
 
-/* --- set sticky header offset based on actual header + hero height --- */
-function setStickyTop(){
-  const headH = document.querySelector('header')?.getBoundingClientRect().height || 0;
-  const heroH = document.getElementById('hero')?.getBoundingClientRect().height || 0;
-  const top = Math.round(headH + heroH);
-  document.documentElement.style.setProperty('--sticky-top', top + 'px');
-}
-window.addEventListener('resize', setStickyTop);
-document.addEventListener('DOMContentLoaded', setStickyTop);
-
-/* ====== data (zeros + current month) ====== */
-const STORE="mysimplifi-app-v1";
+/* ===== DATA (zeroed) ===== */
+const STORE="mysimplifi-compact-v1";
 const seed={
   settings:{twoUsers:false,rollover:false,efSingle:6,efDual:3},
   accounts:[{id:id(),name:"Checking",type:"Checking",opening:0},{id:id(),name:"Credit Card",type:"Credit Card",opening:0}],
@@ -117,119 +133,144 @@ const seed={
 };
 let DB=load()||seed; save();
 
-/* ====== helpers ====== */
+/* ===== HELPERS ===== */
 const getCat=n=>DB.categories.find(c=>c.name===n);
-const catsByGroup=()=>DB.categories.reduce((m,c)=>{if(c.isIncome)return m;(m[c.group]??=[]).push(c);return m;}, {});
+const groups=()=>DB.categories.reduce((m,c)=>{if(c.isIncome)return m;(m[c.group]??=[]).push(c);return m;}, {});
 const txns=(y,m)=>DB.transactions.filter(t=>inMonth(t.date,y,m));
 const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
-function acctBal(name){const a=DB.accounts.find(x=>x.name===name);
-  const base=a?.opening||0, inf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0)),
-        outf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0)); return base+inf-outf;}
+function bal(name){const a=DB.accounts.find(x=>x.name===name);const base=a?.opening||0;const inf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));const outf=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));return base+inf-outf;}
 function income(y,m){return sum(txns(y,m).filter(t=>getCat(t.category)?.isIncome).map(t=>+t.inflow||0))}
-function activity(cat,y,m){const t=txns(y,m).filter(t=>t.category===cat);return sum(t.map(t=>+t.outflow||0))-sum(t.map(t=>+t.inflow||0))}
-function budgeted(cat,y,m){const k=`${y}-${String(m).padStart(2,'0')}`, pg=DB.budgets[k]||{};return +pg[cat]||0}
-function totalBudgeted(y,m){let t=0; const g=catsByGroup(); for(const k in g) g[k].forEach(c=>t+=budgeted(c.name,y,m)); return t}
-function prevAvail(cat,y,m){const d=new Date(y,m-2,1); if(d.getFullYear()<2000) return 0; const py=d.getFullYear(), pm=d.getMonth()+1; return prevAvail(cat,py,pm)+budgeted(cat,py,pm)-activity(cat,py,pm)}
-function available(cat,y,m){const b=budgeted(cat,y,m)-activity(cat,y,m); return DB.settings.rollover?prevAvail(cat,y,m)+b:b}
-const TBB=(y,m)=> income(y,m)-totalBudgeted(y,m);
+function act(cat,y,m){const t=txns(y,m).filter(t=>t.category===cat);return sum(t.map(t=>+t.outflow||0))-sum(t.map(t=>+t.inflow||0))}
+function bud(cat,y,m){const k=`${y}-${String(m).padStart(2,'0')}`, pg=DB.budgets[k]||{};return +pg[cat]||0}
+function budTot(y,m){let t=0;const g=groups();for(const k in g) g[k].forEach(c=>t+=bud(c.name,y,m));return t}
+function prevAvail(cat,y,m){const d=new Date(y,m-2,1);if(d.getFullYear()<2000)return 0;const py=d.getFullYear(),pm=d.getMonth()+1;return prevAvail(cat,py,pm)+bud(cat,py,pm)-act(cat,py,pm)}
+function avail(cat,y,m){const v=bud(cat,y,m)-act(cat,y,m);return DB.settings.rollover?prevAvail(cat,y,m)+v:v}
+const TBB=(y,m)=>income(y,m)-budTot(y,m);
 
-/* ====== layout: hero + bottom tabs ====== */
-const HERO={t:$("#heroTitle"), s:$("#heroSub")};
+/* ===== LAYOUT / ROUTER ===== */
+const heroTitle=$("#heroTitle"), heroSub=$("#heroSub"), chipT=$("#chipTBB"), chipI=$("#chipINC");
 const TABS=[
-  {key:"Budgets", icon:"📊", view:"Budget", title:"Budgets", sub:"Plan your month & To-Be-Budgeted"},
-  {key:"Expenses", icon:"💸", view:"Transactions", title:"Expenses", sub:"Track where your money goes"},
-  {key:"Income", icon:"💵", view:"Transactions", title:"Income", sub:"Log paychecks & inflows"},
-  {key:"Accounts", icon:"🏦", view:"Accounts", title:"Accounts", sub:"Balances & opening amounts"},
-  {key:"Reports", icon:"📈", view:"Summary", title:"Reports", sub:"Cash flow, ratios, emergency fund"},
-  {key:"Settings", icon:"⚙️", view:"Settings", title:"Settings", sub:"Rollover, users, categories, data"}
+  {key:"Budgets",icon:"📊",view:"Budget",title:"Budgets",sub:"Plan your month"},
+  {key:"Spend",icon:"💸",view:"Transactions",title:"Expenses",sub:"Track spending"},
+  {key:"Income",icon:"💵",view:"Transactions",title:"Income",sub:"Log paychecks"},
+  {key:"Accounts",icon:"🏦",view:"Accounts",title:"Accounts",sub:"Balances"},
+  {key:"Reports",icon:"📈",view:"Summary",title:"Reports",sub:"Cash flow & ratios"},
+  {key:"Settings",icon:"⚙️",view:"Settings",title:"Settings",sub:"Preferences & data"}
 ];
-const tabsEl=$("#tabs"); TABS.forEach((t,i)=>{const b=document.createElement("button");
-  b.innerHTML=`<div class="ico">${t.icon}</div><div class="lbl">${t.key}</div>`; b.onclick=()=>route(t.view,t);
-  if(i===0) b.classList.add("active"); tabsEl.appendChild(b);});
+const tabsEl=$("#tabs"); TABS.forEach((t,i)=>{const b=document.createElement("button");b.setAttribute("role","tab");b.innerHTML=`<div class="ico">${t.icon}</div><div class="lbl">${t.key}</div>`;b.onclick=()=>route(t.view,t); if(i===0) b.classList.add("active"); tabsEl.appendChild(b);});
 function setActiveTab(key){$$(".tabbar button").forEach((b,i)=>b.classList.toggle("active",TABS[i].key===key))}
-
-/* ====== router ====== */
 const view=$("#view");
-function route(viewName, meta){
-  if(meta){HERO.t.textContent=meta.title; HERO.s.textContent=meta.sub; setActiveTab(meta.key);}
-  if(viewName==="Budget") renderBudget();
-  else if(viewName==="Transactions") renderTransactions();
-  else if(viewName==="Accounts") renderAccounts();
-  else if(viewName==="Summary") renderSummary();
-  else if(viewName==="Settings") renderSettings();
-  else renderData();
-  setStickyTop(); // recalc sticky table header offset
+function route(name,meta){
+  if(meta){heroTitle.textContent=meta.title; heroSub.textContent=meta.sub; setActiveTab(meta.key);}
+  if(name==="Budget") renderBudget();
+  else if(name==="Transactions") renderTransactions();
+  else if(name==="Accounts") renderAccounts();
+  else if(name==="Summary") renderSummary();
+  else renderSettings();
+  // update chips
+  const [y,m]=CURR.split("-").map(Number); chipT.textContent=cash(TBB(y,m)); chipI.textContent=cash(income(y,m));
+  setSticky();
 }
 
-/* ====== Budget ====== */
+/* ===== UNIVERSAL ADD DRAWER ===== */
+const drawer=$("#drawer"), drawerTitle=$("#drawerTitle"), drawerBody=$("#drawerBody");
+$("#closeDrawer").onclick=()=>drawer.classList.remove("open");
+function openDrawer(title,contentHTML){drawerTitle.textContent=title; drawerBody.innerHTML=contentHTML; drawer.classList.add("open");}
+
+/* ===== VIEWS ===== */
 function renderBudget(){
   view.innerHTML=`
-    <div class="row">
-      <div class="card"><label>Month</label><input id="mPick" type="month" value="${CURR}">
-        <div style="margin-top:8px">
-          <span class="pill p-blue">TBB <b class="mono" id="tbb">—</b></span>
-          <span class="pill p-green" style="margin-left:8px">Income <b class="mono" id="inc">—</b></span>
-        </div>
-      </div>
+    <div class="card">
+      <label for="mPick">Month</label>
+      <input id="mPick" type="month" value="${CURR}" aria-label="Budget month">
+      <small class="muted">Set Budgeted amounts. Available = Budgeted − Activity ${DB.settings.rollover?"(with rollover)":"(no rollover)"}.</small>
     </div>
     <div class="card">
-      <table id="budTbl"><thead><tr><th>Group</th><th>Category</th><th class="right">Budgeted</th><th class="right">Activity</th><th class="right">Available</th></tr></thead>
-      <tbody></tbody>
-      <tfoot><tr><td></td><td><b>TOTALS</b></td><td class="right mono" id="totB"></td><td class="right mono" id="totA"></td><td class="right mono" id="totV"></td></tr></tfoot></table>
+      <table class="table"><thead>
+        <tr><th>Group</th><th>Category</th><th class="right">Budgeted</th><th class="right">Activity</th><th class="right">Available</th></tr>
+      </thead><tbody id="bBody"></tbody>
+      <tfoot><tr><td></td><td><b>Total</b></td><td id="bTot" class="right mono"></td><td id="aTot" class="right mono"></td><td id="vTot" class="right mono"></td></tr></tfoot>
+      </table>
     </div>`;
   const mEl=$("#mPick");
   const draw=()=>{
     const [y,m]=mEl.value.split("-").map(Number);
-    $("#inc").textContent=money(income(y,m)); $("#tbb").textContent=money(TBB(y,m));
-    const body=$("#budTbl tbody"); body.innerHTML=""; let TB=0,TA=0,TV=0;
-    const groups=catsByGroup(); Object.keys(groups).sort().forEach(g=>{
-      const gr=document.createElement("tr"); gr.className="group"; gr.innerHTML=`<td>${g}</td><td colspan="4"></td>`; body.appendChild(gr);
-      groups[g].forEach(c=>{
-        const b=budgeted(c.name,y,m), a=activity(c.name,y,m), v=available(c.name,y,m);
+    const body=$("#bBody"); body.innerHTML=""; let TB=0,TA=0,TV=0;
+    const g=groups(); Object.keys(g).sort().forEach(grp=>{
+      const trh=document.createElement("tr"); trh.innerHTML=`<th>${grp}</th><th></th><th></th><th></th><th></th>`; body.appendChild(trh);
+      g[grp].forEach(c=>{
+        const b=bud(c.name,y,m), a=act(c.name,y,m), v=avail(c.name,y,m);
         TB+=b; TA+=a; TV+=v;
-        const tr=document.createElement("tr");
-        tr.innerHTML=`
+        const r=document.createElement("tr");
+        r.innerHTML=`
           <td></td><td>${c.name}</td>
-          <td class="right"><input class="mono" style="width:120px;text-align:right" type="number" step="0.01" value="${b}" data-cat="${c.name}"></td>
-          <td class="right mono">${money(a)}</td>
-          <td class="right mono ${v<0?'bad':'good'}">${money(v)}</td>`;
-        body.appendChild(tr);
+          <td class="right"><input class="mono" style="width:110px;text-align:right" type="number" step="0.01" value="${b}" data-cat="${c.name}" aria-label="Budgeted ${c.name}"></td>
+          <td class="right mono">${cash(a)}</td>
+          <td class="right mono ${v<0?'bad':'good'}">${cash(v)}</td>`;
+        body.appendChild(r);
       });
     });
-    $("#totB").textContent=money(TB); $("#totA").textContent=money(TA); $("#totV").textContent=money(TV);
-    $$('input[data-cat]',body).forEach(inp=>inp.onchange=e=>{
-      const cat=e.target.dataset.cat, val=parseFloat(e.target.value||"0"), key=mEl.value;
+    $("#bTot").textContent=cash(TB); $("#aTot").textContent=cash(TA); $("#vTot").textContent=cash(TV);
+    $$('input[data-cat]',body).forEach(i=>i.onchange=e=>{
+      const cat=e.target.dataset.cat,val=parseFloat(e.target.value||"0"), key=mEl.value;
       DB.budgets[key]=DB.budgets[key]||{}; DB.budgets[key][cat]=val; save(); draw();
     });
   };
   mEl.onchange=draw; draw();
 }
 
-/* ====== Transactions (income & expenses) ====== */
 function renderTransactions(){
   view.innerHTML=`
     <div class="row">
-      <div class="card"><label>Filter Month</label><input id="txMonth" type="month" value="${CURR}"></div>
-      <div class="card">
-        <label>Add Transaction</label>
-        <div class="row" style="gap:8px">
-          <div style="flex:1 1 130px"><input id="txDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
-          <div style="flex:1 1 140px"><select id="txAcct"></select></div>
-          <div style="flex:1 1 160px"><input id="txPayee" placeholder="Payee"></div>
-          <div style="flex:1 1 170px"><select id="txCat"></select></div>
-          <div style="flex:1 1 120px"><input id="txOut" type="number" step="0.01" placeholder="Outflow"></div>
-          <div style="flex:1 1 120px"><input id="txIn" type="number" step="0.01" placeholder="Inflow"></div>
-          <div><button class="btn" id="addTx">Add</button></div>
-        </div>
-        <div class="muted" style="margin-top:6px">Paychecks = put amount in <b>Inflow</b> and pick category <b>Income</b>.</div>
+      <div class="card" style="flex:2 1 360px">
+        <label>Filter Month</label>
+        <input id="txMonth" type="month" value="${CURR}">
+      </div>
+      <div class="card" style="flex:1 1 240px">
+        <label>Quick Add</label>
+        <button id="addExpense" class="btn" style="width:100%">Add Expense</button>
+        <button id="addIncome" class="btn ghost" style="width:100%;margin-top:8px">Add Income</button>
       </div>
     </div>
     <div class="card">
-      <table><thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
-      <tbody id="txBody"></tbody></table>
+      <table class="table">
+        <thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
+        <tbody id="txBody"></tbody>
+      </table>
     </div>`;
-  const acctSel=$("#txAcct"); DB.accounts.forEach(a=>acctSel.append(new Option(a.name,a.name)));
-  const catSel=$("#txCat"); DB.categories.forEach(c=>catSel.append(new Option(`${c.group}: ${c.name}`,c.name)));
+  const acctOpts = DB.accounts.map(a=>`<option>${a.name}</option>`).join('');
+  const catOpts  = DB.categories.map(c=>`<option value="${c.name}">${c.group}: ${c.name}</option>`).join('');
+  $("#addExpense").onclick=()=>openDrawer("Add Expense",`
+      <div class="row">
+        <div style="flex:1 1 160px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
+      </div>
+      <label>Payee</label><input id="dPayee" placeholder="Merchant">
+      <label>Category</label><select id="dCat">${catOpts}</select>
+      <label>Amount (Outflow)</label><input id="dOut" type="number" step="0.01" placeholder="0.00">
+      <button id="dSave" class="btn" style="margin-top:10px;width:100%">Add Expense</button>
+  `);
+  $("#addIncome").onclick=()=>openDrawer("Add Income",`
+      <div class="row">
+        <div style="flex:1 1 160px"><label>Date</label><input id="dDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+        <div style="flex:1 1 160px"><label>Account</label><select id="dAcct">${acctOpts}</select></div>
+      </div>
+      <label>Payee</label><input id="dPayee" placeholder="Employer">
+      <label>Category</label><select id="dCat"><option value="Income">Income</option></select>
+      <label>Amount (Inflow)</label><input id="dIn" type="number" step="0.01" placeholder="0.00">
+      <button id="dSave" class="btn" style="margin-top:10px;width:100%">Add Income</button>
+  `);
+
+  drawerBody.addEventListener('click',e=>{
+    if(e.target && e.target.id==="dSave"){
+      const date=$("#dDate").value, account=$("#dAcct").value, payee=$("#dPayee").value, cat=$("#dCat").value;
+      const out=parseFloat($("#dOut")?.value||"0"), inn=parseFloat($("#dIn")?.value||"0");
+      if(!(out||inn)) return alert("Enter an amount.");
+      DB.transactions.push({id:id(),date,accountName:account,payee,category:cat,outflow:out,inflow:inn,cleared:true});
+      save(); drawer.classList.remove("open"); draw();
+    }
+  });
+
   const mEl=$("#txMonth");
   const draw=()=>{
     const [y,m]=mEl.value.split("-").map(Number);
@@ -238,111 +279,97 @@ function renderTransactions(){
       const tr=document.createElement("tr");
       tr.innerHTML=`
         <td class="mono">${t.date}</td><td>${t.accountName}</td><td>${t.payee||""}</td><td>${t.category||""}</td>
-        <td class="right mono">${t.outflow?money(t.outflow):""}</td><td class="right mono">${t.inflow?money(t.inflow):""}</td>
-        <td class="right"><button class="btn secondary" data-del="${t.id}">Delete</button></td>`;
+        <td class="right mono">${t.outflow?cash(t.outflow):""}</td><td class="right mono">${t.inflow?cash(t.inflow):""}</td>
+        <td class="right"><button class="btn ghost" data-del="${t.id}">Delete</button></td>`;
       body.appendChild(tr);
     });
     $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.transactions=DB.transactions.filter(t=>t.id!==b.dataset.del); save(); draw();});
-  };
-  $("#addTx").onclick=()=>{
-    const t={id:id(),date:$("#txDate").value,accountName:$("#txAcct").value,payee:$("#txPayee").value,
-      category:$("#txCat").value,outflow:parseFloat($("#txOut").value||"0"),inflow:parseFloat($("#txIn").value||"0"),cleared:true};
-    if(!(t.outflow||t.inflow)) return alert("Enter an outflow or inflow.");
-    DB.transactions.push(t); save(); draw();
+    setSticky();
   };
   mEl.onchange=draw; draw();
 }
 
-/* ====== Accounts ====== */
 function renderAccounts(){
   view.innerHTML=`
     <div class="row">
-      <div class="card">
+      <div class="card" style="flex:2 1 360px">
         <label>Add Account</label>
         <div class="row" style="gap:8px">
           <div style="flex:1 1 160px"><input id="accName" placeholder="Name (e.g., Checking)"></div>
-          <div style="flex:1 1 160px"><select id="accType"><option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option></select></div>
-          <div style="flex:1 1 140px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
-          <div><button class="btn" id="addAcc">Add</button></div>
+          <div style="flex:1 1 140px"><select id="accType"><option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option></select></div>
+          <div style="flex:1 1 120px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
+          <div><button id="accAdd" class="btn">Add</button></div>
         </div>
       </div>
     </div>
     <div class="card">
-      <table><thead><tr><th>Account</th><th>Type</th><th class="right">Opening</th><th class="right">Balance</th><th></th></tr></thead>
+      <table class="table"><thead><tr><th>Account</th><th>Type</th><th class="right">Opening</th><th class="right">Balance</th><th></th></tr></thead>
       <tbody id="accBody"></tbody></table>
     </div>`;
   const draw=()=>{
     const body=$("#accBody"); body.innerHTML="";
     DB.accounts.forEach(a=>{
       const tr=document.createElement("tr");
-      tr.innerHTML=`
-        <td>${a.name}</td><td>${a.type}</td><td class="right mono">${money(a.opening||0)}</td>
-        <td class="right mono">${money(acctBal(a.name))}</td>
-        <td class="right"><button class="btn secondary" data-del="${a.id}">Delete</button></td>`;
+      tr.innerHTML=`<td>${a.name}</td><td>${a.type}</td><td class="right mono">${cash(a.opening||0)}</td><td class="right mono">${cash(bal(a.name))}</td>
+      <td class="right"><button class="btn ghost" data-del="${a.id}">Delete</button></td>`;
       body.appendChild(tr);
     });
-    $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.accounts=DB.accounts.filter(a=>a.id!==b.dataset.del); save(); draw();});
+    $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.accounts=DB.accounts.filter(x=>x.id!==b.dataset.del); save(); draw();});
   };
-  $("#addAcc").onclick=()=>{
-    const nm=$("#accName").value.trim(); if(!nm) return alert("Account name required.");
-    DB.accounts.push({id:id(),name:nm,type:$("#accType").value,opening:parseFloat($("#accOpen").value||"0")}); save(); draw();
+  $("#accAdd").onclick=()=>{
+    const n=$("#accName").value.trim(); if(!n) return alert("Name?"); 
+    DB.accounts.push({id:id(),name:n,type:$("#accType").value,opening:parseFloat($("#accOpen").value||"0")}); save(); draw();
   };
   draw();
 }
 
-/* ====== Summary / Reports ====== */
 function renderSummary(){
   const [y,m]=CURR.split("-").map(Number);
-  const inc=income(y,m), out=sum(txns(y,m).map(t=>+t.outflow||0)), cash=inc-out;
-  let planExp=0; const groups=catsByGroup(); for(const g in groups){ if(g==="Savings") continue; groups[g].forEach(c=>planExp+=budgeted(c.name,y,m)); }
-  const efMonths=DB.settings.twoUsers?DB.settings.efDual:DB.settings.efSingle;
-  const housing=budgeted("Rent",y,m)+budgeted("Electricity",y,m)+budgeted("Water/Sewer",y,m)+budgeted("Gas/Heating",y,m)+budgeted("Internet",y,m);
-  const debt=budgeted("Loan Payments",y,m);
+  const inc=income(y,m), out=sum(txns(y,m).map(t=>+t.outflow||0)), cf=inc-out;
+  let plan=0; const g=groups(); for(const k in g){ if(k==="Savings") continue; g[k].forEach(c=>plan+=bud(c.name,y,m)); }
+  const efM=DB.settings.twoUsers?DB.settings.efDual:DB.settings.efSingle;
+  const housing=bud("Rent",y,m)+bud("Electricity",y,m)+bud("Water/Sewer",y,m)+bud("Gas/Heating",y,m)+bud("Internet",y,m);
+  const debt=bud("Loan Payments",y,m);
   view.innerHTML=`
     <div class="row">
-      <div class="card">
-        <div><span class="pill p-green">Income</span> <b class="mono">${money(inc)}</b></div>
-        <div style="margin-top:8px"><span class="pill p-red">Outflows</span> <b class="mono">${money(out)}</b></div>
-        <div style="margin-top:8px"><span class="pill p-blue">Cash Flow</span> <b class="mono ${cash<0?'bad':'good'}">${money(cash)}</b></div>
-      </div>
-      <div class="card">
-        <div>Housing %: <b>${(inc?(housing/inc*100):0).toFixed(1)}%</b></div>
-        <div>Debt %: <b>${(inc?(debt/inc*100):0).toFixed(1)}%</b></div>
-        <div>Savings Rate (planned): <b>${(inc?((budgeted("Emergency Fund",y,m)+budgeted("Retirement",y,m)+budgeted("Investments",y,m))/inc*100):0).toFixed(1)}%</b></div>
-      </div>
-      <div class="card">
-        <div class="muted">Emergency Fund</div>
-        <div style="margin-top:6px"><b>Target (${efMonths} mo):</b> <span class="mono">${money(planExp*efMonths)}</span></div>
-        <div style="margin-top:6px"><b>Current EF (available):</b> <span class="mono">${money(available("Emergency Fund",y,m))}</span></div>
-        <div style="margin-top:6px"><b>Gap:</b> <span class="mono">${money(planExp*efMonths-available("Emergency Fund",y,m))}</span></div>
-      </div>
+      <div class="card"><div class="pill p-ok">Income</div><div class="mono" style="font-size:22px;margin-top:6px">${cash(inc)}</div></div>
+      <div class="card"><div class="pill p-bad">Outflows</div><div class="mono" style="font-size:22px;margin-top:6px">${cash(out)}</div></div>
+      <div class="card"><div class="pill p-blue">Cash Flow</div><div class="mono ${cf<0?'bad':'good'}" style="font-size:22px;margin-top:6px">${cash(cf)}</div></div>
+    </div>
+    <div class="row">
+      <div class="card"><b>Housing %</b><div class="mono">${inc?(housing/inc*100).toFixed(1):"0.0"}%</div></div>
+      <div class="card"><b>Debt %</b><div class="mono">${inc?(debt/inc*100).toFixed(1):"0.0"}%</div></div>
+      <div class="card"><b>Savings Rate (planned)</b><div class="mono">${inc?((bud("Emergency Fund",y,m)+bud("Retirement",y,m)+bud("Investments",y,m))/inc*100).toFixed(1):"0.0"}%</div></div>
+    </div>
+    <div class="card">
+      <b>Emergency Fund</b>
+      <div style="margin-top:6px">Target (${efM} mo): <span class="mono">${cash(plan*efM)}</span></div>
+      <div style="margin-top:6px">Current EF: <span class="mono">${cash(avail("Emergency Fund",y,m))}</span></div>
+      <div style="margin-top:6px">Gap: <span class="mono">${cash(plan*efM - avail("Emergency Fund",y,m))}</span></div>
     </div>`;
 }
 
-/* ====== Settings & Data ====== */
 function renderSettings(){
   view.innerHTML=`
     <div class="row">
-      <div class="card">
-        <label>Rollover Available</label>
-        <select id="rollSel"><option value="false">Off (simple)</option><option value="true">On (YNAB-style)</option></select>
-        <div class="muted" style="margin-top:6px">When ON, Available carries forward month-to-month.</div>
+      <div class="card"><label>Rollover Available</label>
+        <select id="roll"><option value="false">Off</option><option value="true">On (YNAB-style)</option></select>
+        <small class="muted">When ON, Available carries forward.</small>
       </div>
-      <div class="card">
-        <label>Household Users</label>
-        <select id="usersSel"><option value="1">One</option><option value="2">Two</option></select>
-        <div class="muted" style="margin-top:6px">EF target: 6 months (one) / 3 months (two).</div>
+      <div class="card"><label>Household</label>
+        <select id="users"><option value="1">One</option><option value="2">Two</option></select>
+        <small class="muted">EF target: 6 months (one) / 3 months (two).</small>
       </div>
     </div>
     <div class="row">
       <div class="card" style="flex:2 1 460px">
         <label>Add Category</label>
         <div class="row" style="gap:8px">
-          <div style="flex:1 1 180px"><input id="newCatName" placeholder="Category name"></div>
-          <div style="flex:1 1 160px"><input id="newCatGroup" placeholder="Group (e.g., Food)"></div>
-          <div><button class="btn" id="addCat">Add</button></div>
+          <div style="flex:1 1 180px"><input id="catName" placeholder="Category name"></div>
+          <div style="flex:1 1 160px"><input id="catGroup" placeholder="Group (e.g., Food)"></div>
+          <div><button id="catAdd" class="btn">Add</button></div>
         </div>
-        <table style="margin-top:10px">
+        <table class="table" style="margin-top:8px">
           <thead><tr><th>Group</th><th>Name</th><th>Income?</th><th></th></tr></thead>
           <tbody id="catBody"></tbody>
         </table>
@@ -351,40 +378,40 @@ function renderSettings(){
         <label>Data</label>
         <textarea id="imp" placeholder="Paste JSON to import" style="width:100%;height:120px"></textarea>
         <div class="row" style="gap:8px;margin-top:8px">
-          <button class="btn" id="doExport">Export JSON</button>
-          <button class="btn secondary" id="doImport">Import</button>
-          <button class="btn secondary" id="doReset">Reset (factory zeros)</button>
+          <button class="btn" id="exp">Export</button>
+          <button class="btn ghost" id="impBtn">Import</button>
+          <button class="btn ghost" id="reset">Reset</button>
         </div>
       </div>
     </div>`;
-  $("#rollSel").value=String(DB.settings.rollover); $("#usersSel").value=DB.settings.twoUsers?"2":"1";
-  $("#rollSel").onchange=e=>{DB.settings.rollover=(e.target.value==="true"); save();};
-  $("#usersSel").onchange=e=>{DB.settings.twoUsers=(e.target.value==="2"); save();};
-  $("#addCat").onclick=()=>{
-    const n=$("#newCatName").value.trim(), g=($("#newCatGroup").value.trim()||"Other");
-    if(!n) return alert("Name required."); DB.categories.push({id:id(),name:n,group:g,isIncome:false}); save(); renderSettings();
+  $("#roll").value=String(DB.settings.rollover);
+  $("#users").value=DB.settings.twoUsers?"2":"1";
+  $("#roll").onchange=e=>{DB.settings.rollover=(e.target.value==="true"); save();};
+  $("#users").onchange=e=>{DB.settings.twoUsers=(e.target.value==="2"); save();};
+  $("#catAdd").onclick=()=>{
+    const n=$("#catName").value.trim(); if(!n) return alert("Name?");
+    DB.categories.push({id:id(),name:n,group:$("#catGroup").value.trim()||"Other",isIncome:false}); save(); renderSettings();
   };
   const body=$("#catBody");
   DB.categories.sort((a,b)=>(a.group+a.name).localeCompare(b.group+b.name)).forEach(c=>{
     const tr=document.createElement("tr");
     tr.innerHTML=`<td>${c.group}</td><td>${c.name}</td>
       <td><input type="checkbox" ${c.isIncome?'checked':''} data-inc="${c.id}"></td>
-      <td class="right"><button class="btn secondary" data-del="${c.id}">Delete</button></td>`;
+      <td class="right"><button class="btn ghost" data-del="${c.id}">Delete</button></td>`;
     body.appendChild(tr);
   });
-  $$('input[data-inc]',body).forEach(chk=>chk.onchange=e=>{const C=DB.categories.find(x=>x.id===e.target.dataset.inc); C.isIncome=e.target.checked; save();});
-  $$('button[data-del]',body).forEach(btn=>btn.onclick=()=>{DB.categories=DB.categories.filter(c=>c.id!==btn.dataset.del); save(); renderSettings();});
-  $("#doExport").onclick=()=>{ const data=JSON.stringify(DB,null,2); navigator.clipboard?.writeText(data); alert("Copied JSON to clipboard."); };
-  $("#doImport").onclick=()=>{ try{ DB=JSON.parse($("#imp").value); save(); alert("Imported!"); route("Budget",TABS[0]); }catch(e){ alert("Invalid JSON"); } };
-  $("#doReset").onclick=()=>{ if(!confirm("Reset everything to zeros?"))return; DB=JSON.parse(JSON.stringify(seed)); save(); alert("Reset complete"); route("Budget",TABS[0]); };
+  $$('input[data-inc]',body).forEach(ch=>ch.onchange=e=>{const C=DB.categories.find(x=>x.id===e.target.dataset.inc); C.isIncome=e.target.checked; save();});
+  $$('button[data-del]',body).forEach(b=>b.onclick=()=>{DB.categories=DB.categories.filter(x=>x.id!==b.dataset.del); save(); renderSettings();});
+  $("#exp").onclick=()=>{const j=JSON.stringify(DB,null,2); navigator.clipboard?.writeText(j); alert("JSON copied to clipboard");};
+  $("#impBtn").onclick=()=>{try{DB=JSON.parse($("#imp").value); save(); alert("Imported"); route("Budget",TABS[0]);}catch(e){alert("Invalid JSON")}};
+  $("#reset").onclick=()=>{if(!confirm("Reset to factory zeros?"))return; DB=JSON.parse(JSON.stringify(seed)); save(); route("Budget",TABS[0]);};
 }
-function renderData(){ renderSettings(); } // reuse UI
 
-/* ====== storage ====== */
-function save(){ localStorage.setItem(STORE, JSON.stringify(DB)); }
-function load(){ try{return JSON.parse(localStorage.getItem(STORE));}catch(e){return null;} }
+/* ===== STORAGE ===== */
+function save(){localStorage.setItem(STORE,JSON.stringify(DB))}
+function load(){try{return JSON.parse(localStorage.getItem(STORE))}catch(e){return null}}
 
-/* ====== boot ====== */
+/* ===== BOOT ===== */
 route("Budget", TABS[0]);
 </script>
 </body>
