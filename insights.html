@@ -1,0 +1,13 @@
+<html><body><div id='insightsList'></div><canvas id='barChart'></canvas><canvas id='lineChart'></canvas>
+  <script src="script.js"></script>
+  <script>
+    if (typeof renderDashboard === 'function' && document.getElementById("dashboard")) renderDashboard();
+    if (typeof renderExpenses === 'function' && document.getElementById("expenseList")) renderExpenses();
+    if (typeof renderIncome === 'function' && document.getElementById("incomeList")) renderIncome();
+    if (typeof renderBudgets === 'function' && document.getElementById("budgetList")) renderBudgets();
+    if (typeof renderReports === 'function' && document.getElementById("pieChart")) renderReports();
+    if (typeof renderInsights === 'function' && document.getElementById("insightsList")) renderInsights();
+    if (typeof renderCalendar === 'function' && document.getElementById("calendarList")) renderCalendar();
+  </script>
+</body>
+</html>
