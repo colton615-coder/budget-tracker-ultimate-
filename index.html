@@ -53,8 +53,7 @@
 
 <main id="view"></main>
 
-<script>
-/* ------------------ Utilities ------------------ */
+<script>/* ------------------ Utilities ------------------ */
 const $ = (sel, el=document)=>el.querySelector(sel);
 const $$ = (sel, el=document)=>Array.from(el.querySelectorAll(sel));
 const fmt = n => (isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
@@ -106,6 +105,8 @@ const seedData = {
     {id:id(), date:"2025-08-01", accountName:"Checking", payee:"Employer", category:"Income", memo:"Paycheck", outflow:0, inflow:8000, cleared:true}
   ]
 };
+
+// Budget plan for Aug 2025
 const plan = {
   "Rent":1700,"Groceries":500,"Dining Out":500,"Gasoline":260,"Auto Insurance":315,
   "Streaming Services":114.32,"Other Subscriptions":179.96,"Personal Care":200,"Loan Payments":850,
@@ -114,14 +115,532 @@ const plan = {
 seedData.budgets["2025-08"] = plan;
 
 let DB = load() || seedData;
-save();
+save();/* ------------------ Core getters & budget math ------------------ */
+const getCat = name => DB.categories.find(c=>c.name===name);
 
-/* ------------------ Core + Renderers ------------------ */
-// (⚡ shortened for clarity in this resend)
-// All budget, transactions, accounts, summary, settings, data views are included here.
-// [You already have the full detailed script from before – paste the complete one back in]
+function catsByGroup(){
+  const map = {};
+  DB.categories.forEach(c=>{
+    if (c.isIncome) return; // exclude Income rows from budget table
+    if (!map[c.group]) map[c.group] = [];
+    map[c.group].push(c);
+  });
+  return map;
+}
+const txnsForMonth = (y,m) => DB.transactions.filter(t => inMonth(t.date,y,m));
+const sum = arr => arr.reduce((a,b)=>a+(+b||0),0);
 
-/* ------------------ Storage ------------------ */
+/* Account balances */
+function accountBalance(name){
+  const base = (DB.accounts.find(a=>a.name===name)||{opening:0}).opening || 0;
+  const inflow = sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));
+  const outflow = sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));
+  return base + inflow - outflow;
+}
+
+/* Income for month */
+function monthIncome(y,m){
+  return sum(
+    txnsForMonth(y,m)
+      .filter(t=> (getCat(t.category)||{}).isIncome)
+      .map(t=>+t.inflow||0)
+  );
+}
+
+/* Activity by category (spend minus inflow-to-category credits) */
+function activityByCategory(catName, y,m){
+  const tx = txnsForMonth(y,m).filter(t=>t.category===catName);
+  return sum(tx.map(t=>+t.outflow||0)) - sum(tx.map(t=>+t.inflow||0));
+}
+
+/* Budget plan lookup */
+function budgeted(catName, y,m){
+  const key = `${y}-${String(m).padStart(2,'0')}`;
+  const pg = DB.budgets[key] || {};
+  return +pg[catName] || 0;
+}
+
+/* Totals */
+function totalBudgeted(y,m){
+  const groups = catsByGroup();
+  let total = 0;
+  for (const g in groups){
+    groups[g].forEach(c=> total += budgeted(c.name,y,m));
+  }
+  return total;
+}
+
+/* Available (with optional rollover setting) */
+function available(catName, y,m){
+  const b = budgeted(catName,y,m);
+  const a = activityByCategory(catName,y,m);
+  if (!DB.settings.rollover) return b - a;
+  return prevAvailable(catName,y,m) + b - a;
+}
+function prevAvailable(catName, y, m){
+  // previous month
+  const d = new Date(y, m-2, 1);
+  if (d.getFullYear() < 2000) return 0;
+  const py = d.getFullYear(), pm = d.getMonth()+1;
+  const b = budgeted(catName,py,pm);
+  const a = activityByCategory(catName,py,pm);
+  return prevAvailable(catName,py,pm) + b - a;
+}
+
+/* TBB (To Be Budgeted) */
+function toBeBudgeted(y,m){
+  return monthIncome(y,m) - totalBudgeted(y,m);
+}
+
+/* ------------------ Navigation & router ------------------ */
+const views = ["Budget","Transactions","Accounts","Summary","Settings","Data"];
+const view = document.getElementById("view");
+const nav = document.getElementById("nav");
+
+function setActive(tab){
+  Array.from(nav.querySelectorAll("button"))
+    .forEach(b=>b.classList.toggle("active", b.textContent===tab));
+}
+
+function render(tab="Budget"){
+  setActive(tab);
+  if (tab==="Budget") return renderBudget();
+  if (tab==="Transactions") return renderTransactions();
+  if (tab==="Accounts") return renderAccounts();
+  if (tab==="Summary") return renderSummary();
+  if (tab==="Settings") return renderSettings();
+  if (tab==="Data") return renderData();
+}
+
+/* Build nav buttons once */
+if (!nav.dataset.ready){
+  views.forEach(v=>{
+    const b = document.createElement("button");
+    b.textContent = v;
+    b.onclick = ()=>render(v);
+    nav.appendChild(b);
+  });
+  nav.dataset.ready = "1";
+}
+
+/* ------------------ Render: Budget ------------------ */
+function renderBudget(){
+  // default to month of first transaction, else current month
+  const today = new Date();
+  const defKey = DB.transactions[0] ? monthKey(DB.transactions[0].date) : monthKey(today);
+
+  view.innerHTML = `
+    <div class="row">
+      <div class="card" style="flex:1 1 220px">
+        <label>Month</label>
+        <input id="monthPick" type="month" value="${defKey}">
+        <div class="subtle" style="margin-top:6px">Set budget per category. <span class="pill blue">TBB</span> updates instantly.</div>
+      </div>
+      <div class="card" style="flex:1 1 220px">
+        <div><span class="pill green">Income</span> <b class="mono" id="incVal"></b></div>
+        <div style="margin-top:8px"><span class="pill blue">To Be Budgeted</span> <b class="mono" id="tbbVal"></b></div>
+      </div>
+    </div>
+    <div class="card">
+      <table id="budgetTbl">
+        <thead>
+          <tr><th class="nowrap">Group</th><th>Category</th><th class="right nowrap">Budgeted</th><th class="right nowrap">Activity</th><th class="right nowrap">Available</th></tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+          <tr class="totals">
+            <td></td><td style="font-weight:800">TOTALS</td>
+            <td class="right mono" id="totBud"></td>
+            <td class="right mono" id="totAct"></td>
+            <td class="right mono" id="totAvail"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  `;
+
+  const monthEl = document.getElementById("monthPick");
+
+  const renderRows = ()=>{
+    const [y,m] = monthEl.value.split("-").map(n=>+n);
+    document.getElementById("incVal").textContent = fmt(monthIncome(y,m));
+    document.getElementById("tbbVal").textContent = fmt(toBeBudgeted(y,m));
+
+    const body = document.querySelector("#budgetTbl tbody");
+    body.innerHTML = "";
+    let totB=0, totA=0, totV=0;
+
+    const groups = catsByGroup();
+    Object.keys(groups).sort((a,b)=>a.localeCompare(b)).forEach(g=>{
+      // group header row
+      const gr = document.createElement("tr");
+      gr.className="group";
+      gr.innerHTML = `<td>${g}</td><td colspan="4"></td>`;
+      body.appendChild(gr);
+
+      groups[g].forEach(cat=>{
+        const b = budgeted(cat.name,y,m);
+        const a = activityByCategory(cat.name,y,m);
+        const v = available(cat.name,y,m);
+        totB += b; totA += a; totV += v;
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td></td>
+          <td>${cat.name}</td>
+          <td class="right">
+            <input class="mono" style="text-align:right;width:120px" type="number" step="0.01" value="${b}" data-cat="${cat.name}">
+          </td>
+          <td class="right mono">${fmt(a)}</td>
+          <td class="right mono ${v<0?'danger':'good'}">${fmt(v)}</td>
+        `;
+        body.appendChild(tr);
+      });
+    });
+
+    document.getElementById("totBud").textContent = fmt(totB);
+    document.getElementById("totAct").textContent = fmt(totA);
+    document.getElementById("totAvail").textContent = fmt(totV);
+
+    // edits
+    Array.from(body.querySelectorAll('input[data-cat]')).forEach(inp=>{
+      inp.onchange = e=>{
+        const cat = e.target.dataset.cat;
+        const val = parseFloat(e.target.value||"0");
+        const key = monthEl.value;
+        DB.budgets[key] = DB.budgets[key] || {};
+        DB.budgets[key][cat] = val;
+        save(); renderBudget();
+      };
+    });
+  };
+
+  monthEl.onchange = renderRows;
+  renderRows();
+}
+
+/* ------------------ Render: Transactions ------------------ */
+function renderTransactions(){
+  const todayKey = monthKey(new Date());
+  view.innerHTML = `
+    <div class="row">
+      <div class="card">
+        <label>Filter Month</label>
+        <input id="txMonth" type="month" value="${todayKey}">
+      </div>
+      <div class="card">
+        <label>New Transaction</label>
+        <div class="row" style="gap:8px">
+          <div style="flex:1 1 120px"><input id="txDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+          <div style="flex:1 1 140px"><select id="txAcct"></select></div>
+          <div style="flex:1 1 160px"><input id="txPayee" placeholder="Payee"></div>
+          <div style="flex:1 1 180px"><select id="txCat"></select></div>
+          <div style="flex:1 1 160px"><input id="txMemo" placeholder="Memo"></div>
+          <div style="flex:1 1 110px"><input id="txOut" type="number" step="0.01" placeholder="Outflow"></div>
+          <div style="flex:1 1 110px"><input id="txIn" type="number" step="0.01" placeholder="Inflow"></div>
+          <div><button class="btn" id="addTx">Add</button></div>
+        </div>
+        <div class="subtle" style="margin-top:6px">Income = enter as <b>Inflow</b> with category <b>Income</b>.</div>
+      </div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th>Memo</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
+        <tbody id="txBody"></tbody>
+      </table>
+    </div>
+  `;
+
+  // fill selects
+  const acctSel = document.getElementById("txAcct");
+  DB.accounts.forEach(a=>acctSel.append(new Option(a.name,a.name)));
+  const catSel = document.getElementById("txCat");
+  DB.categories.forEach(c=>catSel.append(new Option(`${c.group}: ${c.name}`,c.name)));
+
+  const monthEl = document.getElementById("txMonth");
+
+  const renderRows = ()=>{
+    const [y,m] = monthEl.value.split("-").map(n=>+n);
+    const body = document.getElementById("txBody"); body.innerHTML = "";
+    DB.transactions
+      .filter(t=>inMonth(t.date,y,m))
+      .sort((a,b)=>new Date(a.date)-new Date(b.date))
+      .forEach(t=>{
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td class="mono">${t.date}</td>
+          <td>${t.accountName}</td>
+          <td>${t.payee||""}</td>
+          <td>${t.category||""}</td>
+          <td>${t.memo||""}</td>
+          <td class="right mono">${t.outflow?fmt(t.outflow):""}</td>
+          <td class="right mono">${t.inflow?fmt(t.inflow):""}</td>
+          <td class="right"><button class="btn secondary" data-del="${t.id}">Delete</button></td>
+        `;
+        body.appendChild(tr);
+      });
+
+    Array.from(body.querySelectorAll('button[data-del]')).forEach(b=>{
+      b.onclick = ()=>{
+        DB.transactions = DB.transactions.filter(t=>t.id !== b.dataset.del);
+        save(); renderTransactions();
+      };
+    });
+  };
+
+  document.getElementById("addTx").onclick = ()=>{
+    const t = {
+      id:id(),
+      date: document.getElementById("txDate").value,
+      accountName: document.getElementById("txAcct").value,
+      payee: document.getElementById("txPayee").value,
+      category: document.getElementById("txCat").value,
+      memo: document.getElementById("txMemo").value,
+      outflow: parseFloat(document.getElementById("txOut").value||"0"),
+      inflow: parseFloat(document.getElementById("txIn").value||"0"),
+      cleared: true
+    };
+    if (!(t.outflow || t.inflow)) return alert("Enter an outflow or inflow.");
+    DB.transactions.push(t);
+    save(); renderTransactions();
+  };
+
+  monthEl.onchange = renderRows;
+  renderRows();
+}
+
+/* ------------------ Render: Accounts ------------------ */
+function renderAccounts(){
+  view.innerHTML = `
+    <div class="row">
+      <div class="card">
+        <label>Add Account</label>
+        <div class="row" style="gap:8px">
+          <div style="flex:1 1 160px"><input id="accName" placeholder="Name (e.g., Checking)"></div>
+          <div style="flex:1 1 160px">
+            <select id="accType">
+              <option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option>
+            </select>
+          </div>
+          <div style="flex:1 1 140px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
+          <div><button class="btn" id="addAcc">Add</button></div>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <table>
+        <thead><tr><th>Account</th><th>Type</th><th class="right">Opening</th><th class="right">Balance</th><th></th></tr></thead>
+        <tbody id="accBody"></tbody>
+      </table>
+    </div>
+  `;
+
+  const renderRows = ()=>{
+    const body = document.getElementById("accBody"); body.innerHTML="";
+    DB.accounts.forEach(a=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${a.name}</td>
+        <td>${a.type}</td>
+        <td class="right mono">${fmt(a.opening||0)}</td>
+        <td class="right mono">${fmt(accountBalance(a.name))}</td>
+        <td class="right"><button class="btn secondary" data-del="${a.id}">Delete</button></td>
+      `;
+      body.appendChild(tr);
+    });
+    Array.from(body.querySelectorAll('button[data-del]')).forEach(b=>{
+      b.onclick = ()=>{
+        DB.accounts = DB.accounts.filter(a=>a.id!==b.dataset.del);
+        save(); renderAccounts();
+      };
+    });
+  };
+
+  document.getElementById("addAcc").onclick = ()=>{
+    const nm = document.getElementById("accName").value.trim();
+    if (!nm) return alert("Account name required.");
+    DB.accounts.push({
+      id:id(),
+      name:nm,
+      type:document.getElementById("accType").value,
+      opening:parseFloat(document.getElementById("accOpen").value||"0")
+    });
+    save(); renderAccounts();
+  };
+
+  renderRows();
+}
+
+/* ------------------ Render: Summary / Reports ------------------ */
+function renderSummary(){
+  const keys = Object.keys(DB.budgets).sort();
+  const defKey = keys[keys.length-1] || monthKey(new Date());
+  const [y,m] = defKey.split("-").map(n=>+n);
+
+  // Expenses for EF target (exclude Savings group)
+  const groups = catsByGroup();
+  let monthlyExpensesPlan = 0;
+  for (const g in groups){
+    if (g==="Savings") continue;
+    groups[g].forEach(c=> monthlyExpensesPlan += budgeted(c.name,y,m));
+  }
+  const efMonths = DB.settings.twoUsers ? DB.settings.efMonthsDual : DB.settings.efMonthsSingle;
+
+  const income = monthIncome(y,m);
+  const outflows = sum(txnsForMonth(y,m).map(t=>+t.outflow||0));
+  const cashflow = income - outflows;
+
+  const housing = budgeted("Rent",y,m) + budgeted("Electricity",y,m)+budgeted("Water/Sewer",y,m)+budgeted("Gas/Heating",y,m)+budgeted("Internet",y,m);
+  const debt = budgeted("Loan Payments",y,m);
+
+  view.innerHTML = `
+    <div class="row">
+      <div class="card">
+        <label>Report Month</label>
+        <input id="sumMonth" type="month" value="${defKey}">
+      </div>
+      <div class="card">
+        <div><span class="pill green">Monthly Income</span> <b class="mono">${fmt(income)}</b></div>
+        <div style="margin-top:8px"><span class="pill red">Total Outflows</span> <b class="mono">${fmt(outflows)}</b></div>
+        <div style="margin-top:8px"><span class="pill blue">Cash Flow</span> <b class="mono ${cashflow<0?'danger':'good'}">${fmt(cashflow)}</b></div>
+      </div>
+      <div class="card">
+        <div>Housing Ratio: <b>${(income? (housing/income*100):0).toFixed(1)}%</b></div>
+        <div>Debt Payment Ratio: <b>${(income? (debt/income*100):0).toFixed(1)}%</b></div>
+        <div>Savings Rate (planned): <b>${(income? ((budgeted("Emergency Fund",y,m)+budgeted("Retirement",y,m)+budgeted("Investments",y,m))/income*100):0).toFixed(1)}%</b></div>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="card">
+        <div class="notice">Emergency Fund</div>
+        <div class="subtle">Target = ${efMonths} months of expenses (excl. Savings).</div>
+        <p style="margin:.5rem 0 0"><b>Target:</b> <span class="mono">${fmt(monthlyExpensesPlan*efMonths)}</span></p>
+        <p style="margin:.25rem 0 0"><b>Current EF (available):</b> <span class="mono">${fmt(available("Emergency Fund",y,m))}</span></p>
+        <p style="margin:.25rem 0 0"><b>Gap:</b> <span class="mono">${fmt(monthlyExpensesPlan*efMonths - available("Emergency Fund",y,m))}</span></p>
+      </div>
+      <div class="card">
+        <div class="notice">Subscriptions Snapshot</div>
+        <p>Streaming + Other Subs (planned): <b class="mono">${fmt(budgeted("Streaming Services",y,m)+budgeted("Other Subscriptions",y,m))}</b></p>
+        <div class="subtle">Cancel low-value subs to free cash for EF/retirement.</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("sumMonth").onchange = renderSummary;
+}
+
+/* ------------------ Render: Settings ------------------ */
+function renderSettings(){
+  view.innerHTML = `
+    <div class="row">
+      <div class="card">
+        <label>Rollover Available to next month</label>
+        <select id="rollSel"><option value="false">Off (simple)</option><option value="true">On (YNAB-style)</option></select>
+        <div class="subtle" style="margin-top:6px">When ON, Available carries forward.</div>
+      </div>
+      <div class="card">
+        <label>Household users</label>
+        <select id="usersSel"><option value="1">One</option><option value="2">Two</option></select>
+        <div class="subtle" style="margin-top:6px">EF target: 6 months (1 user) or 3 months (2 users).</div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="card">
+        <div class="notice">Categories</div>
+        <div class="row" style="gap:8px;margin-top:10px">
+          <div style="flex:1 1 180px"><input id="newCatName" placeholder="Category name"></div>
+          <div style="flex:1 1 160px"><input id="newCatGroup" placeholder="Group (e.g., Food)"></div>
+          <div><button class="btn" id="addCat">Add</button></div>
+        </div>
+        <div class="subtle" style="margin-top:6px">To make an income category, toggle the checkbox below.</div>
+        <table style="margin-top:10px">
+          <thead><tr><th>Group</th><th>Name</th><th>Income?</th><th></th></tr></thead>
+          <tbody id="catBody"></tbody>
+        </table>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("rollSel").value = String(DB.settings.rollover);
+  document.getElementById("usersSel").value = DB.settings.twoUsers ? "2" : "1";
+
+  document.getElementById("rollSel").onchange = e => { DB.settings.rollover = (e.target.value==="true"); save(); };
+  document.getElementById("usersSel").onchange = e => { DB.settings.twoUsers = (e.target.value==="2"); save(); };
+
+  document.getElementById("addCat").onclick = ()=>{
+    const n = document.getElementById("newCatName").value.trim();
+    const g = document.getElementById("newCatGroup").value.trim() || "Other";
+    if (!n) return alert("Enter a category name.");
+    DB.categories.push({id:id(), name:n, group:g, isIncome:false});
+    save(); renderSettings();
+  };
+
+  const body = document.getElementById("catBody");
+  DB.categories
+    .sort((a,b)=> (a.group+a.name).localeCompare(b.group+b.name))
+    .forEach(c=>{
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${c.group}</td>
+        <td>${c.name}</td>
+        <td><input type="checkbox" ${c.isIncome?'checked':''} data-inc="${c.id}"></td>
+        <td class="right"><button class="btn secondary" data-del="${c.id}">Delete</button></td>
+      `;
+      body.appendChild(tr);
+    });
+
+  Array.from(body.querySelectorAll('input[data-inc]')).forEach(chk=>{
+    chk.onchange = e=>{
+      const cat = DB.categories.find(c=>c.id===e.target.dataset.inc);
+      cat.isIncome = e.target.checked;
+      save();
+    };
+  });
+  Array.from(body.querySelectorAll('button[data-del]')).forEach(btn=>{
+    btn.onclick = ()=>{
+      const idd = btn.dataset.del;
+      DB.categories = DB.categories.filter(c=>c.id!==idd);
+      // Note: budgets are keyed by name; removing here doesn't break existing plans
+      save(); renderSettings();
+    };
+  });
+}
+
+/* ------------------ Render: Data (export/import/reset) ------------------ */
+function renderData(){
+  const exportObj = JSON.stringify(DB, null, 2);
+  view.innerHTML = `
+    <div class="row">
+      <div class="card" style="flex:2 1 460px">
+        <div class="notice">Export (backup)</div>
+        <textarea id="expTxt" style="width:100%;height:240px;background:#0c1128;color:#bcd; border:1px solid var(--line);border-radius:10px;padding:10px">${exportObj}</textarea>
+        <div style="margin-top:8px" class="subtle">Copy this JSON to back up your data. Paste it below to restore on any device.</div>
+      </div>
+      <div class="card" style="flex:1 1 300px">
+        <div class="notice">Import / Reset</div>
+        <textarea id="impTxt" placeholder="Paste JSON here" style="width:100%;height:140px;background:#0c1128;color:#bcd; border:1px solid var(--line);border-radius:10px;padding:10px"></textarea>
+        <div class="row" style="margin-top:8px;gap:8px">
+          <button class="btn" id="doImport">Import JSON</button>
+          <button class="btn secondary" id="doReset">Reset (factory)</button>
+        </div>
+        <div class="subtle" style="margin-top:8px">Import completely replaces your current data.</div>
+      </div>
+    </div>
+  `;
+
+  document.getElementById("doImport").onclick = ()=>{
+    try {
+      const obj = JSON.parse(document.getElementById("impTxt").value);
+      DB = obj; save(); alert("Import complete."); render("Budget");
+    } catch(e){ alert("Invalid JSON."); }
+  };
+  document.getElementById("doReset").onclick = ()=>{
+    if (!confirm("Reset to factory seed? This deletes your current data.")) return;
+    DB = structuredClone ? structuredClone(seedData) : JSON.parse(JSON.stringify(seedData));
+    save(); alert("Reset complete."); render("Budget");
+  };
+}/* ------------------ Storage ------------------ */
 function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
 function load(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)); }catch(e){ return null; } }
 
