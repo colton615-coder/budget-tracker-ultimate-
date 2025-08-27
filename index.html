@@ -1,650 +1,400 @@
 <!doctype html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>My Simplifi (Personal Budget)</title>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>My Simplifi (Lite)</title>
 <style>
   :root{
-    --bg:#0f1220; --card:#171a2b; --muted:#8f98b3; --text:#e9ecff;
-    --accent:#6ee7b7; --accent2:#60a5fa; --danger:#f87171; --warn:#fbbf24;
-    --line:#262b45;
+    --bg:#0e1117; --card:#141923; --muted:#9aa3b2; --text:#eef1f7;
+    --line:#222838; --acc:#6ee7b7; --acc2:#60a5fa; --bad:#f87171; --good:#34d399;
   }
-  *{box-sizing:border-box;font-family:system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-  body{margin:0;background:var(--bg);color:var(--text)}
-  header{display:flex;gap:.75rem;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line);background:#0f1326;position:sticky;top:0;z-index:9}
-  h1{font-size:16px;margin:0;font-weight:700;letter-spacing:.2px}
-  nav{display:flex;gap:.35rem;flex-wrap:wrap}
-  nav button{background:transparent;border:1px solid var(--line);color:var(--text);padding:8px 10px;border-radius:10px;font-weight:600}
-  nav button.active{background:var(--accent2);border-color:transparent;color:#061024}
-  main{padding:16px;max-width:1100px;margin:0 auto}
-  .card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px;margin-bottom:14px}
-  .row{display:flex;gap:10px;flex-wrap:wrap}
-  .row > .card{flex:1 1 320px}
+  *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+  body{margin:0;background:linear-gradient(180deg,#0e1117,#0b0f1a);color:var(--text)}
+  header{position:sticky;top:0;z-index:10;background:#0f1422cc;backdrop-filter:blur(6px);
+    display:flex;align-items:center;justify-content:space-between;gap:12px;padding:14px 16px;border-bottom:1px solid var(--line)}
+  h1{margin:0;font-size:16px;letter-spacing:.2px}
+  nav{display:flex;gap:6px;flex-wrap:wrap}
+  nav button{border:1px solid var(--line);background:#12172a;color:var(--text);padding:8px 12px;border-radius:10px;font-weight:600}
+  nav button.active{background:var(--acc2);color:#071222;border-color:transparent}
+  main{padding:18px;max-width:980px;margin:0 auto}
+  .card{background:linear-gradient(180deg,#12182a,#0f1422);border:1px solid var(--line);border-radius:16px;padding:14px;margin-bottom:14px}
+  .row{display:flex;gap:12px;flex-wrap:wrap}
+  .row>.card{flex:1 1 300px}
   label{display:block;color:var(--muted);font-size:12px;margin-bottom:6px}
-  input,select{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#101531;color:var(--text)}
-  input[type="month"]{padding:8px 10px}
+  input,select,textarea{width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:#0f1528;color:var(--text)}
+  input[type="month"],input[type="date"]{padding:8px 10px}
   table{width:100%;border-collapse:collapse}
-  th,td{border-bottom:1px dashed var(--line);padding:10px 8px;font-size:14px}
-  th{color:#c9d2ff;text-align:left;background:#121735;position:sticky;top:48px}
-  tfoot td{font-weight:800;border-top:1px solid var(--line)}
+  th,td{padding:10px 8px;border-bottom:1px dashed #1e2536;font-size:14px}
+  th{color:#cfd7ff;background:#10162b;position:sticky;top:52px}
+  tfoot td{border-top:1px solid var(--line);font-weight:700}
+  .right{text-align:right}.mono{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
   .pill{display:inline-block;padding:2px 8px;border-radius:999px;font-size:12px}
-  .green{background:rgba(110,231,183,.12);color:#6ee7b7}
-  .red{background:rgba(248,113,113,.12);color:#f87171}
-  .blue{background:rgba(96,165,250,.12);color:#60a5fa}
-  .btn{cursor:pointer;background:var(--accent2);color:#061024;border:none;border-radius:10px;padding:10px 12px;font-weight:700}
+  .p-green{background:rgba(110,231,183,.12);color:#6ee7b7}
+  .p-blue{background:rgba(96,165,250,.12);color:#60a5fa}
+  .p-red{background:rgba(248,113,113,.12);color:#f87171}
+  .btn{cursor:pointer;background:var(--acc2);color:#071222;border:none;border-radius:10px;padding:10px 12px;font-weight:700}
   .btn.secondary{background:transparent;color:var(--text);border:1px solid var(--line)}
-  .right{text-align:right}
-  .subtle{color:var(--muted);font-size:12px}
-  .group{background:#121735;font-weight:800}
-  .totals{background:#101531}
-  .danger{color:#fca5a5}
-  .good{color:#86efac}
-  .notice{font-weight:600}
-  .nowrap{white-space:nowrap}
-  .mono{font-feature-settings:"tnum" 1,"lnum" 1;font-variant-numeric:tabular-nums lining-nums}
+  .muted{color:var(--muted);font-size:12px}
+  .group{background:#10162b;font-weight:800}
+  .good{color:var(--good)} .bad{color:var(--bad)}
 </style>
 </head>
 <body>
 <header>
-  <h1>My Simplifi • envelope budget</h1>
+  <h1>My Simplifi • clean & minimal</h1>
   <nav id="nav"></nav>
 </header>
-
 <main id="view"></main>
 
-<script>/* ------------------ Utilities ------------------ */
-const $ = (sel, el=document)=>el.querySelector(sel);
-const $$ = (sel, el=document)=>Array.from(el.querySelectorAll(sel));
-const fmt = n => (isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
-const monthKey = d => {
-  const dt = (d instanceof Date) ? d : new Date(d);
-  return `${dt.getFullYear()}-${String(dt.getMonth()+1).padStart(2,'0')}`;
-};
-const startOfMonth = (y,m)=>new Date(y, m-1, 1);
-const endOfMonth   = (y,m)=>new Date(y, m, 0, 23,59,59,999);
-const inMonth = (d, y, m) => {
-  const dt = new Date(d);
-  return dt >= startOfMonth(y,m) && dt <= endOfMonth(y,m);
-};
-const id = ()=>crypto.randomUUID ? crypto.randomUUID() : (Math.random().toString(36).slice(2)+Date.now());
+<script>
+/* ========= Utilities ========= */
+const $=(s,e=document)=>e.querySelector(s);const $$=(s,e=document)=>Array.from(e.querySelectorAll(s));
+const money=n=>(isNaN(n)?0:n).toLocaleString(undefined,{style:'currency',currency:'USD',maximumFractionDigits:2});
+const monthKey=d=>{const dt=d instanceof Date?d:new Date(d);return dt.toISOString().slice(0,7)};
+const startOfMonth=(y,m)=>new Date(y,m-1,1), endOfMonth=(y,m)=>new Date(y,m,0,23,59,59,999);
+const inMonth=(d,y,m)=>{const dt=new Date(d);return dt>=startOfMonth(y,m)&&dt<=endOfMonth(y,m)};
+const id=()=>crypto.randomUUID?crypto.randomUUID():(Math.random().toString(36).slice(2)+Date.now());
+const today=new Date(); const CURRENT_KEY=monthKey(today);
 
-/* ------------------ Data (seeded with your numbers) ------------------ */
-const STORE_KEY = "my-simplifi-data-v1";
-
-const seedData = {
-  settings: { twoUsers:false, rollover:false, efMonthsSingle:6, efMonthsDual:3 },
-  accounts: [
-    {id:id(), name:"Checking", type:"Checking", opening:0},
-    {id:id(), name:"Credit Card", type:"Credit Card", opening:0},
-    {id:id(), name:"Cash", type:"Cash", opening:0},
+/* ========= Data (RESET to zeros) ========= */
+const STORE="mysimplifi-lite-v1";
+const seed={
+  settings:{twoUsers:false,rollover:false,efSingle:6,efDual:3},
+  accounts:[
+    {id:id(),name:"Checking",type:"Checking",opening:0},
+    {id:id(),name:"Credit Card",type:"Credit Card",opening:0},
   ],
-  categories: [
-    {id:id(), name:"Income", group:"Income", isIncome:true},
-    {id:id(), name:"Rent", group:"Housing"},
-    {id:id(), name:"Electricity", group:"Utilities"},
-    {id:id(), name:"Water/Sewer", group:"Utilities"},
-    {id:id(), name:"Gas/Heating", group:"Utilities"},
-    {id:id(), name:"Internet", group:"Utilities"},
-    {id:id(), name:"Groceries", group:"Food"},
-    {id:id(), name:"Dining Out", group:"Food"},
-    {id:id(), name:"Gasoline", group:"Transportation"},
-    {id:id(), name:"Auto Insurance", group:"Transportation"},
-    {id:id(), name:"Streaming Services", group:"Personal"},
-    {id:id(), name:"Other Subscriptions", group:"Personal"},
-    {id:id(), name:"Personal Care", group:"Personal"},
-    {id:id(), name:"Loan Payments", group:"Debt"},
-    {id:id(), name:"Emergency Fund", group:"Savings"},
-    {id:id(), name:"Retirement", group:"Savings"},
-    {id:id(), name:"Investments", group:"Savings"},
+  categories:[
+    {id:id(),name:"Income",group:"Income",isIncome:true},
+    {id:id(),name:"Rent",group:"Housing"},
+    {id:id(),name:"Electricity",group:"Utilities"},
+    {id:id(),name:"Water/Sewer",group:"Utilities"},
+    {id:id(),name:"Gas/Heating",group:"Utilities"},
+    {id:id(),name:"Internet",group:"Utilities"},
+    {id:id(),name:"Groceries",group:"Food"},
+    {id:id(),name:"Dining Out",group:"Food"},
+    {id:id(),name:"Gasoline",group:"Transportation"},
+    {id:id(),name:"Auto Insurance",group:"Transportation"},
+    {id:id(),name:"Streaming Services",group:"Personal"},
+    {id:id(),name:"Other Subscriptions",group:"Personal"},
+    {id:id(),name:"Personal Care",group:"Personal"},
+    {id:id(),name:"Loan Payments",group:"Debt"},
+    {id:id(),name:"Emergency Fund",group:"Savings"},
+    {id:id(),name:"Retirement",group:"Savings"},
+    {id:id(),name:"Investments",group:"Savings"},
   ],
-  budgets: {
-    "2025-08": {}
-  },
-  transactions: [
-    {id:id(), date:"2025-08-01", accountName:"Checking", payee:"Employer", category:"Income", memo:"Paycheck", outflow:0, inflow:8000, cleared:true}
-  ]
+  budgets:{ [CURRENT_KEY]:{} },     // no pre-filled numbers
+  transactions:[]                   // no seed income/outflows
 };
+let DB=load()||seed; save();
 
-// Budget plan for Aug 2025
-const plan = {
-  "Rent":1700,"Groceries":500,"Dining Out":500,"Gasoline":260,"Auto Insurance":315,
-  "Streaming Services":114.32,"Other Subscriptions":179.96,"Personal Care":200,"Loan Payments":850,
-  "Electricity":0,"Water/Sewer":0,"Gas/Heating":0,"Internet":0,"Emergency Fund":0,"Retirement":0,"Investments":0
-};
-seedData.budgets["2025-08"] = plan;
-
-let DB = load() || seedData;
-save();/* ------------------ Core getters & budget math ------------------ */
-const getCat = name => DB.categories.find(c=>c.name===name);
-
-function catsByGroup(){
-  const map = {};
-  DB.categories.forEach(c=>{
-    if (c.isIncome) return; // exclude Income rows from budget table
-    if (!map[c.group]) map[c.group] = [];
-    map[c.group].push(c);
-  });
-  return map;
-}
-const txnsForMonth = (y,m) => DB.transactions.filter(t => inMonth(t.date,y,m));
-const sum = arr => arr.reduce((a,b)=>a+(+b||0),0);
-
-/* Account balances */
+/* ========= Core helpers ========= */
+const getCat=n=>DB.categories.find(c=>c.name===n);
+const catsByGroup=()=>DB.categories.reduce((m,c)=>{if(c.isIncome)return m;(m[c.group]??=[]).push(c);return m;}, {});
+const txnsFor=(y,m)=>DB.transactions.filter(t=>inMonth(t.date,y,m));
+const sum=a=>a.reduce((x,y)=>x+(+y||0),0);
 function accountBalance(name){
-  const base = (DB.accounts.find(a=>a.name===name)||{opening:0}).opening || 0;
-  const inflow = sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));
-  const outflow = sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));
-  return base + inflow - outflow;
+  const a=DB.accounts.find(a=>a.name===name); const base=a?.opening||0;
+  const inflow=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.inflow||0));
+  const outflow=sum(DB.transactions.filter(t=>t.accountName===name).map(t=>+t.outflow||0));
+  return base+inflow-outflow;
 }
-
-/* Income for month */
 function monthIncome(y,m){
-  return sum(
-    txnsForMonth(y,m)
-      .filter(t=> (getCat(t.category)||{}).isIncome)
-      .map(t=>+t.inflow||0)
-  );
+  return sum(txnsFor(y,m).filter(t=>getCat(t.category)?.isIncome).map(t=>+t.inflow||0));
 }
-
-/* Activity by category (spend minus inflow-to-category credits) */
-function activityByCategory(catName, y,m){
-  const tx = txnsForMonth(y,m).filter(t=>t.category===catName);
+function activity(cat,y,m){
+  const tx=txnsFor(y,m).filter(t=>t.category===cat);
   return sum(tx.map(t=>+t.outflow||0)) - sum(tx.map(t=>+t.inflow||0));
 }
-
-/* Budget plan lookup */
-function budgeted(catName, y,m){
-  const key = `${y}-${String(m).padStart(2,'0')}`;
-  const pg = DB.budgets[key] || {};
-  return +pg[catName] || 0;
+function budgeted(cat,y,m){
+  const key=`${y}-${String(m).padStart(2,'0')}`, pg=DB.budgets[key]||{};
+  return +pg[cat]||0;
 }
-
-/* Totals */
 function totalBudgeted(y,m){
-  const groups = catsByGroup();
-  let total = 0;
-  for (const g in groups){
-    groups[g].forEach(c=> total += budgeted(c.name,y,m));
-  }
-  return total;
+  let tot=0; for(const g in catsByGroup()) catsByGroup()[g].forEach(c=>tot+=budgeted(c.name,y,m)); return tot;
 }
-
-/* Available (with optional rollover setting) */
-function available(catName, y,m){
-  const b = budgeted(catName,y,m);
-  const a = activityByCategory(catName,y,m);
-  if (!DB.settings.rollover) return b - a;
-  return prevAvailable(catName,y,m) + b - a;
+function prevAvailable(cat,y,m){
+  const d=new Date(y,m-2,1); if(d.getFullYear()<2000) return 0;
+  const py=d.getFullYear(), pm=d.getMonth()+1;
+  const b=budgeted(cat,py,pm), a=activity(cat,py,pm);
+  return (DB.settings.rollover?prevAvailable(cat,py,pm):0)+b-a;
 }
-function prevAvailable(catName, y, m){
-  // previous month
-  const d = new Date(y, m-2, 1);
-  if (d.getFullYear() < 2000) return 0;
-  const py = d.getFullYear(), pm = d.getMonth()+1;
-  const b = budgeted(catName,py,pm);
-  const a = activityByCategory(catName,py,pm);
-  return prevAvailable(catName,py,pm) + b - a;
+function available(cat,y,m){
+  const b=budgeted(cat,y,m), a=activity(cat,y,m);
+  return DB.settings.rollover?prevAvailable(cat,y,m)+b-a:b-a;
 }
+const TBB=(y,m)=> monthIncome(y,m)-totalBudgeted(y,m);
 
-/* TBB (To Be Budgeted) */
-function toBeBudgeted(y,m){
-  return monthIncome(y,m) - totalBudgeted(y,m);
-}
+/* ========= Navigation ========= */
+const view=$("#view"), nav=$("#nav"); const TABS=["Budget","Transactions","Accounts","Summary","Settings","Data"];
+TABS.forEach(t=>{const b=document.createElement("button"); b.textContent=t; b.onclick=()=>render(t); nav.appendChild(b);});
+function setActive(tab){ $$("nav button").forEach(b=>b.classList.toggle("active",b.textContent===tab)); }
 
-/* ------------------ Navigation & router ------------------ */
-const views = ["Budget","Transactions","Accounts","Summary","Settings","Data"];
-const view = document.getElementById("view");
-const nav = document.getElementById("nav");
-
-function setActive(tab){
-  Array.from(nav.querySelectorAll("button"))
-    .forEach(b=>b.classList.toggle("active", b.textContent===tab));
-}
-
-function render(tab="Budget"){
-  setActive(tab);
-  if (tab==="Budget") return renderBudget();
-  if (tab==="Transactions") return renderTransactions();
-  if (tab==="Accounts") return renderAccounts();
-  if (tab==="Summary") return renderSummary();
-  if (tab==="Settings") return renderSettings();
-  if (tab==="Data") return renderData();
-}
-
-/* Build nav buttons once */
-if (!nav.dataset.ready){
-  views.forEach(v=>{
-    const b = document.createElement("button");
-    b.textContent = v;
-    b.onclick = ()=>render(v);
-    nav.appendChild(b);
-  });
-  nav.dataset.ready = "1";
-}
-
-/* ------------------ Render: Budget ------------------ */
+/* ========= Budget ========= */
 function renderBudget(){
-  // default to month of first transaction, else current month
-  const today = new Date();
-  const defKey = DB.transactions[0] ? monthKey(DB.transactions[0].date) : monthKey(today);
-
-  view.innerHTML = `
+  view.innerHTML=`
     <div class="row">
-      <div class="card" style="flex:1 1 220px">
-        <label>Month</label>
-        <input id="monthPick" type="month" value="${defKey}">
-        <div class="subtle" style="margin-top:6px">Set budget per category. <span class="pill blue">TBB</span> updates instantly.</div>
+      <div class="card"><label>Month</label><input id="monthPick" type="month" value="${CURRENT_KEY}">
+        <div class="muted" style="margin-top:6px">Budget per category. <span class="pill p-blue">TBB</span> updates instantly.</div>
       </div>
-      <div class="card" style="flex:1 1 220px">
-        <div><span class="pill green">Income</span> <b class="mono" id="incVal"></b></div>
-        <div style="margin-top:8px"><span class="pill blue">To Be Budgeted</span> <b class="mono" id="tbbVal"></b></div>
+      <div class="card">
+        <div><span class="pill p-green">Income</span> <b class="mono" id="incVal">—</b></div>
+        <div style="margin-top:8px"><span class="pill p-blue">To Be Budgeted</span> <b class="mono" id="tbbVal">—</b></div>
       </div>
     </div>
     <div class="card">
-      <table id="budgetTbl">
-        <thead>
-          <tr><th class="nowrap">Group</th><th>Category</th><th class="right nowrap">Budgeted</th><th class="right nowrap">Activity</th><th class="right nowrap">Available</th></tr>
-        </thead>
-        <tbody></tbody>
-        <tfoot>
-          <tr class="totals">
-            <td></td><td style="font-weight:800">TOTALS</td>
-            <td class="right mono" id="totBud"></td>
-            <td class="right mono" id="totAct"></td>
-            <td class="right mono" id="totAvail"></td>
-          </tr>
-        </tfoot>
-      </table>
+      <table id="budTbl"><thead>
+        <tr><th>Group</th><th>Category</th><th class="right">Budgeted</th><th class="right">Activity</th><th class="right">Available</th></tr>
+      </thead><tbody></tbody>
+      <tfoot><tr><td></td><td><b>TOTALS</b></td><td class="right mono" id="totB"></td><td class="right mono" id="totA"></td><td class="right mono" id="totV"></td></tr></tfoot></table>
     </div>
   `;
-
-  const monthEl = document.getElementById("monthPick");
-
-  const renderRows = ()=>{
-    const [y,m] = monthEl.value.split("-").map(n=>+n);
-    document.getElementById("incVal").textContent = fmt(monthIncome(y,m));
-    document.getElementById("tbbVal").textContent = fmt(toBeBudgeted(y,m));
-
-    const body = document.querySelector("#budgetTbl tbody");
-    body.innerHTML = "";
-    let totB=0, totA=0, totV=0;
-
-    const groups = catsByGroup();
-    Object.keys(groups).sort((a,b)=>a.localeCompare(b)).forEach(g=>{
-      // group header row
-      const gr = document.createElement("tr");
-      gr.className="group";
-      gr.innerHTML = `<td>${g}</td><td colspan="4"></td>`;
-      body.appendChild(gr);
-
-      groups[g].forEach(cat=>{
-        const b = budgeted(cat.name,y,m);
-        const a = activityByCategory(cat.name,y,m);
-        const v = available(cat.name,y,m);
-        totB += b; totA += a; totV += v;
-
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td></td>
-          <td>${cat.name}</td>
-          <td class="right">
-            <input class="mono" style="text-align:right;width:120px" type="number" step="0.01" value="${b}" data-cat="${cat.name}">
-          </td>
-          <td class="right mono">${fmt(a)}</td>
-          <td class="right mono ${v<0?'danger':'good'}">${fmt(v)}</td>
-        `;
+  const mEl=$("#monthPick");
+  const draw=()=>{
+    const [y,m]=mEl.value.split("-").map(Number);
+    $("#incVal").textContent=money(monthIncome(y,m));
+    $("#tbbVal").textContent=money(TBB(y,m));
+    const body=$("#budTbl tbody"); body.innerHTML="";
+    let TB=0, TA=0, TV=0;
+    const groups=catsByGroup();
+    Object.keys(groups).sort().forEach(g=>{
+      const gr=document.createElement("tr"); gr.className="group";
+      gr.innerHTML=`<td>${g}</td><td colspan="4"></td>`; body.appendChild(gr);
+      groups[g].forEach(c=>{
+        const b=budgeted(c.name,y,m), a=activity(c.name,y,m), v=available(c.name,y,m);
+        TB+=b; TA+=a; TV+=v;
+        const tr=document.createElement("tr");
+        tr.innerHTML=`
+          <td></td><td>${c.name}</td>
+          <td class="right"><input class="mono" style="width:120px;text-align:right" type="number" step="0.01" value="${b}" data-cat="${c.name}"></td>
+          <td class="right mono">${money(a)}</td>
+          <td class="right mono ${v<0?'bad':'good'}">${money(v)}</td>`;
         body.appendChild(tr);
       });
     });
-
-    document.getElementById("totBud").textContent = fmt(totB);
-    document.getElementById("totAct").textContent = fmt(totA);
-    document.getElementById("totAvail").textContent = fmt(totV);
-
-    // edits
-    Array.from(body.querySelectorAll('input[data-cat]')).forEach(inp=>{
-      inp.onchange = e=>{
-        const cat = e.target.dataset.cat;
-        const val = parseFloat(e.target.value||"0");
-        const key = monthEl.value;
-        DB.budgets[key] = DB.budgets[key] || {};
-        DB.budgets[key][cat] = val;
-        save(); renderBudget();
+    $("#totB").textContent=money(TB); $("#totA").textContent=money(TA); $("#totV").textContent=money(TV);
+    $$('input[data-cat]',body).forEach(inp=>{
+      inp.onchange=e=>{
+        const cat=e.target.dataset.cat, val=parseFloat(e.target.value||"0"), key=mEl.value;
+        DB.budgets[key]=DB.budgets[key]||{}; DB.budgets[key][cat]=val; save(); draw();
       };
     });
   };
-
-  monthEl.onchange = renderRows;
-  renderRows();
+  mEl.onchange=draw; draw();
 }
 
-/* ------------------ Render: Transactions ------------------ */
+/* ========= Transactions ========= */
 function renderTransactions(){
-  const todayKey = monthKey(new Date());
-  view.innerHTML = `
+  view.innerHTML=`
     <div class="row">
-      <div class="card">
-        <label>Filter Month</label>
-        <input id="txMonth" type="month" value="${todayKey}">
-      </div>
+      <div class="card"><label>Filter Month</label><input id="txMonth" type="month" value="${CURRENT_KEY}"></div>
       <div class="card">
         <label>New Transaction</label>
         <div class="row" style="gap:8px">
-          <div style="flex:1 1 120px"><input id="txDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
+          <div style="flex:1 1 130px"><input id="txDate" type="date" value="${new Date().toISOString().slice(0,10)}"></div>
           <div style="flex:1 1 140px"><select id="txAcct"></select></div>
           <div style="flex:1 1 160px"><input id="txPayee" placeholder="Payee"></div>
-          <div style="flex:1 1 180px"><select id="txCat"></select></div>
-          <div style="flex:1 1 160px"><input id="txMemo" placeholder="Memo"></div>
-          <div style="flex:1 1 110px"><input id="txOut" type="number" step="0.01" placeholder="Outflow"></div>
-          <div style="flex:1 1 110px"><input id="txIn" type="number" step="0.01" placeholder="Inflow"></div>
+          <div style="flex:1 1 170px"><select id="txCat"></select></div>
+          <div style="flex:1 1 120px"><input id="txOut" type="number" step="0.01" placeholder="Outflow"></div>
+          <div style="flex:1 1 120px"><input id="txIn" type="number" step="0.01" placeholder="Inflow"></div>
           <div><button class="btn" id="addTx">Add</button></div>
         </div>
-        <div class="subtle" style="margin-top:6px">Income = enter as <b>Inflow</b> with category <b>Income</b>.</div>
+        <div class="muted" style="margin-top:6px">Income = put amount in <b>Inflow</b> & pick category <b>Income</b>.</div>
       </div>
     </div>
     <div class="card">
-      <table>
-        <thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th>Memo</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
-        <tbody id="txBody"></tbody>
-      </table>
-    </div>
-  `;
-
-  // fill selects
-  const acctSel = document.getElementById("txAcct");
-  DB.accounts.forEach(a=>acctSel.append(new Option(a.name,a.name)));
-  const catSel = document.getElementById("txCat");
-  DB.categories.forEach(c=>catSel.append(new Option(`${c.group}: ${c.name}`,c.name)));
-
-  const monthEl = document.getElementById("txMonth");
-
-  const renderRows = ()=>{
-    const [y,m] = monthEl.value.split("-").map(n=>+n);
-    const body = document.getElementById("txBody"); body.innerHTML = "";
-    DB.transactions
-      .filter(t=>inMonth(t.date,y,m))
-      .sort((a,b)=>new Date(a.date)-new Date(b.date))
-      .forEach(t=>{
-        const tr = document.createElement("tr");
-        tr.innerHTML = `
-          <td class="mono">${t.date}</td>
-          <td>${t.accountName}</td>
-          <td>${t.payee||""}</td>
-          <td>${t.category||""}</td>
-          <td>${t.memo||""}</td>
-          <td class="right mono">${t.outflow?fmt(t.outflow):""}</td>
-          <td class="right mono">${t.inflow?fmt(t.inflow):""}</td>
-          <td class="right"><button class="btn secondary" data-del="${t.id}">Delete</button></td>
-        `;
-        body.appendChild(tr);
-      });
-
-    Array.from(body.querySelectorAll('button[data-del]')).forEach(b=>{
-      b.onclick = ()=>{
-        DB.transactions = DB.transactions.filter(t=>t.id !== b.dataset.del);
-        save(); renderTransactions();
-      };
+      <table><thead><tr><th>Date</th><th>Account</th><th>Payee</th><th>Category</th><th class="right">Outflow</th><th class="right">Inflow</th><th></th></tr></thead>
+      <tbody id="txBody"></tbody></table>
+    </div>`;
+  const acctSel=$("#txAcct"); DB.accounts.forEach(a=>acctSel.append(new Option(a.name,a.name)));
+  const catSel=$("#txCat"); DB.categories.forEach(c=>catSel.append(new Option(`${c.group}: ${c.name}`,c.name)));
+  const mEl=$("#txMonth");
+  const draw=()=>{
+    const [y,m]=mEl.value.split("-").map(Number);
+    const body=$("#txBody"); body.innerHTML="";
+    DB.transactions.filter(t=>inMonth(t.date,y,m)).sort((a,b)=>new Date(a.date)-new Date(b.date)).forEach(t=>{
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td class="mono">${t.date}</td><td>${t.accountName}</td><td>${t.payee||""}</td><td>${t.category||""}</td>
+        <td class="right mono">${t.outflow?money(t.outflow):""}</td><td class="right mono">${t.inflow?money(t.inflow):""}</td>
+        <td class="right"><button class="btn secondary" data-del="${t.id}">Delete</button></td>`;
+      body.appendChild(tr);
     });
+    $$('button[data-del]',body).forEach(b=>b.onclick=()=>{ DB.transactions=DB.transactions.filter(t=>t.id!==b.dataset.del); save(); draw(); });
   };
-
-  document.getElementById("addTx").onclick = ()=>{
-    const t = {
-      id:id(),
-      date: document.getElementById("txDate").value,
-      accountName: document.getElementById("txAcct").value,
-      payee: document.getElementById("txPayee").value,
-      category: document.getElementById("txCat").value,
-      memo: document.getElementById("txMemo").value,
-      outflow: parseFloat(document.getElementById("txOut").value||"0"),
-      inflow: parseFloat(document.getElementById("txIn").value||"0"),
-      cleared: true
-    };
-    if (!(t.outflow || t.inflow)) return alert("Enter an outflow or inflow.");
-    DB.transactions.push(t);
-    save(); renderTransactions();
+  $("#addTx").onclick=()=>{
+    const t={id:id(),date:$("#txDate").value,accountName:$("#txAcct").value,payee:$("#txPayee").value,
+      category:$("#txCat").value,outflow:parseFloat($("#txOut").value||"0"),inflow:parseFloat($("#txIn").value||"0"),cleared:true};
+    if(!(t.outflow||t.inflow)) return alert("Enter an outflow or inflow.");
+    DB.transactions.push(t); save(); draw();
   };
-
-  monthEl.onchange = renderRows;
-  renderRows();
+  mEl.onchange=draw; draw();
 }
 
-/* ------------------ Render: Accounts ------------------ */
+/* ========= Accounts ========= */
 function renderAccounts(){
-  view.innerHTML = `
+  view.innerHTML=`
     <div class="row">
       <div class="card">
         <label>Add Account</label>
         <div class="row" style="gap:8px">
           <div style="flex:1 1 160px"><input id="accName" placeholder="Name (e.g., Checking)"></div>
-          <div style="flex:1 1 160px">
-            <select id="accType">
-              <option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option>
-            </select>
-          </div>
+          <div style="flex:1 1 160px"><select id="accType"><option>Checking</option><option>Savings</option><option>Credit Card</option><option>Cash</option></select></div>
           <div style="flex:1 1 140px"><input id="accOpen" type="number" step="0.01" placeholder="Opening $"></div>
           <div><button class="btn" id="addAcc">Add</button></div>
         </div>
       </div>
     </div>
     <div class="card">
-      <table>
-        <thead><tr><th>Account</th><th>Type</th><th class="right">Opening</th><th class="right">Balance</th><th></th></tr></thead>
-        <tbody id="accBody"></tbody>
-      </table>
-    </div>
-  `;
-
-  const renderRows = ()=>{
-    const body = document.getElementById("accBody"); body.innerHTML="";
+      <table><thead><tr><th>Account</th><th>Type</th><th class="right">Opening</th><th class="right">Balance</th><th></th></tr></thead>
+      <tbody id="accBody"></tbody></table>
+    </div>`;
+  const draw=()=>{
+    const body=$("#accBody"); body.innerHTML="";
     DB.accounts.forEach(a=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${a.name}</td>
-        <td>${a.type}</td>
-        <td class="right mono">${fmt(a.opening||0)}</td>
-        <td class="right mono">${fmt(accountBalance(a.name))}</td>
-        <td class="right"><button class="btn secondary" data-del="${a.id}">Delete</button></td>
-      `;
+      const tr=document.createElement("tr");
+      tr.innerHTML=`
+        <td>${a.name}</td><td>${a.type}</td>
+        <td class="right mono">${money(a.opening||0)}</td>
+        <td class="right mono">${money(accountBalance(a.name))}</td>
+        <td class="right"><button class="btn secondary" data-del="${a.id}">Delete</button></td>`;
       body.appendChild(tr);
     });
-    Array.from(body.querySelectorAll('button[data-del]')).forEach(b=>{
-      b.onclick = ()=>{
-        DB.accounts = DB.accounts.filter(a=>a.id!==b.dataset.del);
-        save(); renderAccounts();
-      };
-    });
+    $$('button[data-del]',body).forEach(b=>b.onclick=()=>{ DB.accounts=DB.accounts.filter(a=>a.id!==b.dataset.del); save(); draw(); });
   };
-
-  document.getElementById("addAcc").onclick = ()=>{
-    const nm = document.getElementById("accName").value.trim();
-    if (!nm) return alert("Account name required.");
-    DB.accounts.push({
-      id:id(),
-      name:nm,
-      type:document.getElementById("accType").value,
-      opening:parseFloat(document.getElementById("accOpen").value||"0")
-    });
-    save(); renderAccounts();
+  $("#addAcc").onclick=()=>{
+    const nm=$("#accName").value.trim(); if(!nm) return alert("Account name required.");
+    DB.accounts.push({id:id(),name:nm,type:$("#accType").value,opening:parseFloat($("#accOpen").value||"0")});
+    save(); draw();
   };
-
-  renderRows();
+  draw();
 }
 
-/* ------------------ Render: Summary / Reports ------------------ */
+/* ========= Summary ========= */
 function renderSummary(){
-  const keys = Object.keys(DB.budgets).sort();
-  const defKey = keys[keys.length-1] || monthKey(new Date());
-  const [y,m] = defKey.split("-").map(n=>+n);
-
-  // Expenses for EF target (exclude Savings group)
-  const groups = catsByGroup();
-  let monthlyExpensesPlan = 0;
-  for (const g in groups){
-    if (g==="Savings") continue;
-    groups[g].forEach(c=> monthlyExpensesPlan += budgeted(c.name,y,m));
-  }
-  const efMonths = DB.settings.twoUsers ? DB.settings.efMonthsDual : DB.settings.efMonthsSingle;
-
-  const income = monthIncome(y,m);
-  const outflows = sum(txnsForMonth(y,m).map(t=>+t.outflow||0));
-  const cashflow = income - outflows;
-
-  const housing = budgeted("Rent",y,m) + budgeted("Electricity",y,m)+budgeted("Water/Sewer",y,m)+budgeted("Gas/Heating",y,m)+budgeted("Internet",y,m);
-  const debt = budgeted("Loan Payments",y,m);
-
-  view.innerHTML = `
+  const key=CURRENT_KEY; const [y,m]=key.split("-").map(Number);
+  const income=monthIncome(y,m);
+  const outflows=sum(txnsFor(y,m).map(t=>+t.outflow||0));
+  const cash=income-outflows;
+  // expenses plan (excl. Savings)
+  let planExp=0; for(const g in catsByGroup()){ if(g==="Savings") continue; catsByGroup()[g].forEach(c=> planExp+=budgeted(c.name,y,m)); }
+  const efMonths = DB.settings.twoUsers ? DB.settings.efDual : DB.settings.efSingle;
+  const housing=budgeted("Rent",y,m)+budgeted("Electricity",y,m)+budgeted("Water/Sewer",y,m)+budgeted("Gas/Heating",y,m)+budgeted("Internet",y,m);
+  const debt=budgeted("Loan Payments",y,m);
+  view.innerHTML=`
     <div class="row">
       <div class="card">
-        <label>Report Month</label>
-        <input id="sumMonth" type="month" value="${defKey}">
+        <div><span class="pill p-green">Income (this month)</span> <b class="mono">${money(income)}</b></div>
+        <div style="margin-top:8px"><span class="pill p-red">Outflows (this month)</span> <b class="mono">${money(outflows)}</b></div>
+        <div style="margin-top:8px"><span class="pill p-blue">Cash Flow</span> <b class="mono ${cash<0?'bad':'good'}">${money(cash)}</b></div>
       </div>
       <div class="card">
-        <div><span class="pill green">Monthly Income</span> <b class="mono">${fmt(income)}</b></div>
-        <div style="margin-top:8px"><span class="pill red">Total Outflows</span> <b class="mono">${fmt(outflows)}</b></div>
-        <div style="margin-top:8px"><span class="pill blue">Cash Flow</span> <b class="mono ${cashflow<0?'danger':'good'}">${fmt(cashflow)}</b></div>
-      </div>
-      <div class="card">
-        <div>Housing Ratio: <b>${(income? (housing/income*100):0).toFixed(1)}%</b></div>
-        <div>Debt Payment Ratio: <b>${(income? (debt/income*100):0).toFixed(1)}%</b></div>
+        <div>Housing %: <b>${(income? (housing/income*100):0).toFixed(1)}%</b></div>
+        <div>Debt %: <b>${(income? (debt/income*100):0).toFixed(1)}%</b></div>
         <div>Savings Rate (planned): <b>${(income? ((budgeted("Emergency Fund",y,m)+budgeted("Retirement",y,m)+budgeted("Investments",y,m))/income*100):0).toFixed(1)}%</b></div>
       </div>
-    </div>
-
-    <div class="row">
       <div class="card">
-        <div class="notice">Emergency Fund</div>
-        <div class="subtle">Target = ${efMonths} months of expenses (excl. Savings).</div>
-        <p style="margin:.5rem 0 0"><b>Target:</b> <span class="mono">${fmt(monthlyExpensesPlan*efMonths)}</span></p>
-        <p style="margin:.25rem 0 0"><b>Current EF (available):</b> <span class="mono">${fmt(available("Emergency Fund",y,m))}</span></p>
-        <p style="margin:.25rem 0 0"><b>Gap:</b> <span class="mono">${fmt(monthlyExpensesPlan*efMonths - available("Emergency Fund",y,m))}</span></p>
+        <div class="muted">Emergency Fund Target (${efMonths} mo of planned expenses)</div>
+        <div style="margin-top:6px"><b>Target:</b> <span class="mono">${money(planExp*efMonths)}</span></div>
+        <div style="margin-top:6px"><b>Current EF (available):</b> <span class="mono">${money(available("Emergency Fund",y,m))}</span></div>
+        <div style="margin-top:6px"><b>Gap:</b> <span class="mono">${money(planExp*efMonths - available("Emergency Fund",y,m))}</span></div>
       </div>
-      <div class="card">
-        <div class="notice">Subscriptions Snapshot</div>
-        <p>Streaming + Other Subs (planned): <b class="mono">${fmt(budgeted("Streaming Services",y,m)+budgeted("Other Subscriptions",y,m))}</b></p>
-        <div class="subtle">Cancel low-value subs to free cash for EF/retirement.</div>
-      </div>
-    </div>
-  `;
-
-  document.getElementById("sumMonth").onchange = renderSummary;
+    </div>`;
 }
 
-/* ------------------ Render: Settings ------------------ */
+/* ========= Settings ========= */
 function renderSettings(){
-  view.innerHTML = `
+  view.innerHTML=`
     <div class="row">
       <div class="card">
-        <label>Rollover Available to next month</label>
+        <label>Rollover Available</label>
         <select id="rollSel"><option value="false">Off (simple)</option><option value="true">On (YNAB-style)</option></select>
-        <div class="subtle" style="margin-top:6px">When ON, Available carries forward.</div>
+        <div class="muted" style="margin-top:6px">When ON, Available carries forward.</div>
       </div>
       <div class="card">
-        <label>Household users</label>
+        <label>Household Users</label>
         <select id="usersSel"><option value="1">One</option><option value="2">Two</option></select>
-        <div class="subtle" style="margin-top:6px">EF target: 6 months (1 user) or 3 months (2 users).</div>
+        <div class="muted" style="margin-top:6px">EF target: 6 months (one) / 3 months (two).</div>
       </div>
     </div>
     <div class="row">
       <div class="card">
-        <div class="notice">Categories</div>
-        <div class="row" style="gap:8px;margin-top:10px">
+        <label>Add Category</label>
+        <div class="row" style="gap:8px">
           <div style="flex:1 1 180px"><input id="newCatName" placeholder="Category name"></div>
           <div style="flex:1 1 160px"><input id="newCatGroup" placeholder="Group (e.g., Food)"></div>
           <div><button class="btn" id="addCat">Add</button></div>
         </div>
-        <div class="subtle" style="margin-top:6px">To make an income category, toggle the checkbox below.</div>
         <table style="margin-top:10px">
           <thead><tr><th>Group</th><th>Name</th><th>Income?</th><th></th></tr></thead>
           <tbody id="catBody"></tbody>
         </table>
       </div>
-    </div>
-  `;
-
-  document.getElementById("rollSel").value = String(DB.settings.rollover);
-  document.getElementById("usersSel").value = DB.settings.twoUsers ? "2" : "1";
-
-  document.getElementById("rollSel").onchange = e => { DB.settings.rollover = (e.target.value==="true"); save(); };
-  document.getElementById("usersSel").onchange = e => { DB.settings.twoUsers = (e.target.value==="2"); save(); };
-
-  document.getElementById("addCat").onclick = ()=>{
-    const n = document.getElementById("newCatName").value.trim();
-    const g = document.getElementById("newCatGroup").value.trim() || "Other";
-    if (!n) return alert("Enter a category name.");
-    DB.categories.push({id:id(), name:n, group:g, isIncome:false});
-    save(); renderSettings();
+    </div>`;
+  $("#rollSel").value=String(DB.settings.rollover);
+  $("#usersSel").value=DB.settings.twoUsers?"2":"1";
+  $("#rollSel").onchange=e=>{DB.settings.rollover=(e.target.value==="true"); save();};
+  $("#usersSel").onchange=e=>{DB.settings.twoUsers=(e.target.value==="2"); save();};
+  $("#addCat").onclick=()=>{
+    const n=$("#newCatName").value.trim(); const g=$("#newCatGroup").value.trim()||"Other"; if(!n) return alert("Name required.");
+    DB.categories.push({id:id(),name:n,group:g,isIncome:false}); save(); renderSettings();
   };
-
-  const body = document.getElementById("catBody");
-  DB.categories
-    .sort((a,b)=> (a.group+a.name).localeCompare(b.group+b.name))
-    .forEach(c=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${c.group}</td>
-        <td>${c.name}</td>
-        <td><input type="checkbox" ${c.isIncome?'checked':''} data-inc="${c.id}"></td>
-        <td class="right"><button class="btn secondary" data-del="${c.id}">Delete</button></td>
-      `;
-      body.appendChild(tr);
-    });
-
-  Array.from(body.querySelectorAll('input[data-inc]')).forEach(chk=>{
-    chk.onchange = e=>{
-      const cat = DB.categories.find(c=>c.id===e.target.dataset.inc);
-      cat.isIncome = e.target.checked;
-      save();
-    };
+  const body=$("#catBody");
+  DB.categories.sort((a,b)=>(a.group+a.name).localeCompare(b.group+b.name)).forEach(c=>{
+    const tr=document.createElement("tr");
+    tr.innerHTML=`
+      <td>${c.group}</td><td>${c.name}</td>
+      <td><input type="checkbox" ${c.isIncome?'checked':''} data-inc="${c.id}"></td>
+      <td class="right"><button class="btn secondary" data-del="${c.id}">Delete</button></td>`;
+    body.appendChild(tr);
   });
-  Array.from(body.querySelectorAll('button[data-del]')).forEach(btn=>{
-    btn.onclick = ()=>{
-      const idd = btn.dataset.del;
-      DB.categories = DB.categories.filter(c=>c.id!==idd);
-      // Note: budgets are keyed by name; removing here doesn't break existing plans
-      save(); renderSettings();
-    };
-  });
+  $$('input[data-inc]',body).forEach(chk=>chk.onchange=e=>{const C=DB.categories.find(x=>x.id===e.target.dataset.inc); C.isIncome=e.target.checked; save();});
+  $$('button[data-del]',body).forEach(btn=>btn.onclick=()=>{DB.categories=DB.categories.filter(c=>c.id!==btn.dataset.del); save(); renderSettings();});
 }
 
-/* ------------------ Render: Data (export/import/reset) ------------------ */
+/* ========= Data (export/import/reset) ========= */
 function renderData(){
-  const exportObj = JSON.stringify(DB, null, 2);
-  view.innerHTML = `
+  const json=JSON.stringify(DB,null,2);
+  view.innerHTML=`
     <div class="row">
       <div class="card" style="flex:2 1 460px">
-        <div class="notice">Export (backup)</div>
-        <textarea id="expTxt" style="width:100%;height:240px;background:#0c1128;color:#bcd; border:1px solid var(--line);border-radius:10px;padding:10px">${exportObj}</textarea>
-        <div style="margin-top:8px" class="subtle">Copy this JSON to back up your data. Paste it below to restore on any device.</div>
+        <div class="muted">Export (backup JSON)</div>
+        <textarea id="exp" style="width:100%;height:240px">${json}</textarea>
       </div>
-      <div class="card" style="flex:1 1 300px">
-        <div class="notice">Import / Reset</div>
-        <textarea id="impTxt" placeholder="Paste JSON here" style="width:100%;height:140px;background:#0c1128;color:#bcd; border:1px solid var(--line);border-radius:10px;padding:10px"></textarea>
-        <div class="row" style="margin-top:8px;gap:8px">
+      <div class="card" style="flex:1 1 320px">
+        <div class="muted">Import / Reset</div>
+        <textarea id="imp" placeholder="Paste JSON here" style="width:100%;height:140px"></textarea>
+        <div class="row" style="gap:8px;margin-top:8px">
           <button class="btn" id="doImport">Import JSON</button>
-          <button class="btn secondary" id="doReset">Reset (factory)</button>
+          <button class="btn secondary" id="doReset">Reset (factory zeros)</button>
         </div>
-        <div class="subtle" style="margin-top:8px">Import completely replaces your current data.</div>
       </div>
-    </div>
-  `;
-
-  document.getElementById("doImport").onclick = ()=>{
-    try {
-      const obj = JSON.parse(document.getElementById("impTxt").value);
-      DB = obj; save(); alert("Import complete."); render("Budget");
-    } catch(e){ alert("Invalid JSON."); }
+    </div>`;
+  $("#doImport").onclick=()=>{
+    try{ DB=JSON.parse($("#imp").value); save(); alert("Imported!"); render("Budget"); }
+    catch(e){ alert("Invalid JSON"); }
   };
-  document.getElementById("doReset").onclick = ()=>{
-    if (!confirm("Reset to factory seed? This deletes your current data.")) return;
-    DB = structuredClone ? structuredClone(seedData) : JSON.parse(JSON.stringify(seedData));
-    save(); alert("Reset complete."); render("Budget");
+  $("#doReset").onclick=()=>{
+    if(!confirm("Reset everything to zeros?"))return;
+    DB=JSON.parse(JSON.stringify(seed)); save(); alert("Reset complete"); render("Budget");
   };
-}/* ------------------ Storage ------------------ */
-function save(){ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
-function load(){ try{ return JSON.parse(localStorage.getItem(STORE_KEY)); }catch(e){ return null; } }
+}
 
-/* ------------------ Kick things off ------------------ */
+/* ========= Storage & boot ========= */
+function save(){ localStorage.setItem(STORE, JSON.stringify(DB)); }
+function load(){ try{return JSON.parse(localStorage.getItem(STORE));}catch(e){return null;} }
+
+function render(tab="Budget"){
+  $$("nav button").forEach(b=>b.classList.toggle("active",b.textContent===tab));
+  if(tab==="Budget") return renderBudget();
+  if(tab==="Transactions") return renderTransactions();
+  if(tab==="Accounts") return renderAccounts();
+  if(tab==="Summary") return renderSummary();
+  if(tab==="Settings") return renderSettings();
+  if(tab==="Data") return renderData();
+}
+TABS.forEach((t,i)=>nav.children[i].classList.toggle("active",t==="Budget"));
 render("Budget");
 </script>
 </body>
